@@ -20,3 +20,7 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/
+
+mybatis:
+  mapper-locations: classpath:repository/*.xml  # XML 파일 경로
+  type-aliases-package: com.bong.board.domain.dto  # DTO 패키지 경로

@@ -1,6 +1,7 @@
 package com.bong.board.controller.api;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bong.board.domain.dto.ResponseDto;
 import com.bong.board.domain.dto.UserDto;
+import com.bong.board.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -21,21 +23,20 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/user")
 public class UserApiController {
 	
+	@Autowired
+	private UserService userService;
+	
 	@PostMapping(value = "/signup", produces = "application/json")
 	@ResponseBody
 	public ResponseDto<?> save (@RequestBody UserDto userDto) {
-		System.out.println(userDto);
-		
-		//userService. 
-		return ResponseDto.createSuccess(userDto, "성공"); 
+		String result = userService.idOverlapCheck(userDto);
+	    if ("SUCCESS".equals(result)) {
+	        return ResponseDto.createSuccess(userDto, "회원가입이 완료되었습니다.");
+	    } else {
+	        return ResponseDto.createError(result.equals("DUPLICATE") ? "아이디가 이미 존재합니다." : "회원가입에 실패했습니다.");
+	    }
 	}
-//	@PostMapping(value = "/signup", consumes = "application/json", produces = "application/json")
-//    public ResponseEntity postExample(@RequestBody UserDto request) {
-//        // 요청 데이터 확인
-//        System.out.println("Received request: " + request);
-//
-//        // 응답 생성
-//        ResponseDto response = new ResponseDto("Data processed successfully", 200);
-//        return ResponseEntity.ok(response);
-//    }
+	
+	
+
 }

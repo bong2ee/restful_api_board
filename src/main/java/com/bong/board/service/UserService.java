@@ -6,4 +6,6 @@ public interface UserService {
 
 	public int signupUser(UserDto userDto);
 	
+	public String idOverlapCheck(UserDto userDto);
+	
 }
