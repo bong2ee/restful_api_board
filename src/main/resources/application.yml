@@ -1,0 +1,22 @@
+# Encoding 설정
+server:
+  port: 8088
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+# DBMS 설정
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:XE  # Oracle DB URL
+    driver-class-name: oracle.jdbc.OracleDriver  # Oracle JDBC 드라이버
+    username: BONG  
+    password: 1234 
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  web:
+    resources:
+      static-locations: classpath:/static/
