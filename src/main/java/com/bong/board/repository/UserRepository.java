@@ -7,8 +7,10 @@ import com.bong.board.domain.dto.UserDto;
 @Mapper
 public interface UserRepository {
 
-	int signupUser(UserDto userDto);
+	public int signupUser(UserDto userDto);
 
-	String idOverlapCheck(UserDto userDto);
+	public String idOverlapCheck(UserDto userDto);
+
+	public UserDto selectUser(UserDto userDto);
 	
 }

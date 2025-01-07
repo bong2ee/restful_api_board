@@ -64,9 +64,9 @@
 
   <script>
     $('#signupButton').on('click', function() {
-      //if (!validateForm()) {
-      //  return false;
-      //}
+      if (!validateForm()) {
+        return false;
+      }
 
       save();
     });

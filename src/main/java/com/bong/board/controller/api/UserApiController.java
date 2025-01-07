@@ -16,6 +16,7 @@ import com.bong.board.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -28,15 +29,16 @@ public class UserApiController {
 	
 	@PostMapping(value = "/signup", produces = "application/json")
 	@ResponseBody
-	public ResponseDto<?> save (@RequestBody UserDto userDto) {
-		String result = userService.idOverlapCheck(userDto);
-	    if ("SUCCESS".equals(result)) {
-	        return ResponseDto.createSuccess(userDto, "회원가입이 완료되었습니다.");
-	    } else {
-	        return ResponseDto.createError(result.equals("DUPLICATE") ? "아이디가 이미 존재합니다." : "회원가입에 실패했습니다.");
-	    }
+	public ResponseDto<?> signup_proc (@RequestBody UserDto userDto) {
+		return userService.idOverlapCheck(userDto);
 	}
 	
+	@PostMapping(value = "/signin", produces = "application/json")
+	@ResponseBody
+	public ResponseDto<?> signin_proc (@RequestBody UserDto userDto, HttpSession session) {
+		return userService.selectUser(userDto, session);
+		
+	}
 	
 
 }
