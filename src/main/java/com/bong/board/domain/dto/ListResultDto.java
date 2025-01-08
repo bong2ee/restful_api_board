@@ -1,8 +1,12 @@
 package com.bong.board.domain.dto;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+
+import lombok.Builder;
 import lombok.ToString;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,13 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserDto {
-
-	private String userNm;
-	private String emailAddr;
-	private String userNo;
-	private String userId;
-	private String userPw;
-	private String regDate;
+public class ListResultDto<T> {
 	
+    private int itemsCount;
+    private List<T> data;
 }

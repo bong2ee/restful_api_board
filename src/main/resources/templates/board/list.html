@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header"></head> <!-- 헤더 인클루드 -->
+
+<body class="hold-transition layout-top-nav">
+	<div class="wrapper">
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1>jsGrid</h1>
+						</div>
+						<div class="col-sm-6">
+							<ol class="breadcrumb float-sm-right">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item active">jsGrid</li>
+							</ol>
+						</div>
+					</div>
+				</div><!-- /.container-fluid -->
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+
+				<div class="card">
+					<div class="card-body">
+						<div id="jsGridBody"></div>
+					</div>
+					<!--<div class="card-footer">
+						<button type="button" class="btn btn-primary float-right" onclick="flowWrite()">신규작성</button>
+					</div>-->
+				</div>
+				
+			</section>
+			<!-- /.content -->
+		</div>
+
+	</div>
+	<!-- ./wrapper -->
+
+	<script>
+		var setFields = [
+		    {name: "boardNo", title:"No.", width: "auto", align: "center"}
+		    , {name: "title", title:"제목", width: "auto", align: "start"}
+		    , {name: "memberId", title:"작성자" , width: "auto", align: "center"}
+			, {name: "viewCnt", title:"조회수" , width: "auto", align: "center"}
+			, {name: "regDate", title:"작성일자" , width: "auto", align: "center"}
+		];
+
+		const jsGridBody = $("#jsGridBody");
+		$(function () {
+		    jsGridBody.jsGrid({
+		        width: "100%"
+		        , autoload: true
+		        , noDataContent: "데이터가 없습니다."
+		        , paging: false
+		        , pageLoading: true
+		        , pageIndex: 1
+		        , pageSize: 10
+		        , pageButtonCount: 10
+		        , pagerFormat: "{first} {prev} {pages} {next} {last}"
+		        , pagePrevText: "이전"
+		        , pageNextText: "다음"
+		        , pageFirstText: "처음"
+		        , pageLastText: "끝"
+		        , controller: {
+		            loadData: function (filter) {
+		               // var frm = $("form[name=frmSearch]");
+		                var listJsonUrl = "/api/board/list";
+		                //frm.find("[name=pageIndex]").val(filter.pageIndex);
+		                //frm.find("[name=pageSize]").val(filter.pageSize);
+		                return $.getJSON(listJsonUrl, function(data) {
+							console.log(data)
+							jsGridBody.data("itemsCount", data.itemsCount);
+		                });
+		            },
+		        }
+		        , fields: setFields
+		    });
+		});
+	</script>
+</body>
+<!-- 푸터 인클루드 -->
+<footer th:replace="common/footer"></footer>
+
+</html>

@@ -13,8 +13,8 @@ public class HomeController {
 	@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 		
-		String userId = (String) session.getAttribute("userId");
-		model.addAttribute("userId", userId);
+		String memberId = (String) session.getAttribute("memberId");
+		model.addAttribute("memberId", memberId);
 
 		return "home";
 	}

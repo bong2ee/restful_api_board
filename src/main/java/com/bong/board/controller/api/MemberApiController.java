@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bong.board.domain.dto.ResponseDto;
-import com.bong.board.domain.dto.UserDto;
-import com.bong.board.service.UserService;
+import com.bong.board.domain.dto.MemberDto;
+import com.bong.board.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -21,22 +21,22 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user")
-public class UserApiController {
+@RequestMapping("/api/member")
+public class MemberApiController {
 	
 	@Autowired
-	private UserService userService;
+	private MemberService memberService;
 	
 	@PostMapping(value = "/signup", produces = "application/json")
 	@ResponseBody
-	public ResponseDto<?> signup_proc (@RequestBody UserDto userDto) {
-		return userService.signupUser(userDto);
+	public ResponseDto<?> signup (@RequestBody MemberDto memberDto) {
+		return memberService.signup(memberDto);
 	}
 	
 	@PostMapping(value = "/signin", produces = "application/json")
 	@ResponseBody
-	public ResponseDto<?> signin_proc (@RequestBody UserDto userDto, HttpSession session) {
-		return userService.signinUser(userDto, session);
+	public ResponseDto<?> signin (@RequestBody MemberDto memberDto, HttpSession session) {
+		return memberService.signin(memberDto, session);
 		
 	}
 	

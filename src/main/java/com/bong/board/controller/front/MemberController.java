@@ -8,22 +8,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class UserController {
+public class MemberController {
 
 	@GetMapping("/signin")
 	public String signin() {
-		return "user/signin";
+		return "member/signin";
 	}
 	
 	@GetMapping("/signup")
 	public String signup() {
-		return "user/signup";
+		return "member/signup";
 	}
 	
 	@GetMapping("/signout")
 	public String logout(HttpSession session, Model model) {
 		
-		String userId = (String) session.getAttribute("userId");
+		String memberId = (String) session.getAttribute("memberId");
 		session.invalidate();
 		int logout = 1;
 		model.addAttribute("logout", logout);

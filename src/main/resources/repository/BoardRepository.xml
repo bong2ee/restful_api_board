@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bong.board.repository.BoardRepository">
+
+	<!-- 게시 -->
+	<insert id="saveBoard" parameterType="com.bong.board.domain.dto.BoardDto">
+		INSERT INTO BOARD (
+			BOARD_NO,
+			GROUP_NO,
+			STEP,
+			DEPTH,
+			TITLE,
+			CONTENT,
+			MEMBER_NO,
+			MEMBER_ID,
+			DEL_YN
+		) VALUES (
+			SEQ_BOARDNO.NEXTVAL,
+			#{groupNo},
+			#{step},
+			#{depth},
+			#{title},
+			#{content},
+			#{memberNo},
+			#{memberId},
+			#{delYn}
+		)
+	</insert>
+	
+	<select id="selectBoardList" parameterType="com.bong.board.domain.dto.BoardDto">
+			SELECT 
+			    BOARD_NO AS boardNo, 
+			    GROUP_NO AS groupNo,
+			    STEP AS step,
+			    DEPTH AS depth,
+			    VIEW_CNT AS viewCnt,
+			    TITLE AS title, 
+			    CONTENT AS content, 
+			    MEMBER_NO AS memberNo,
+			    MEMBER_ID AS memberId,
+			    DEL_YN AS delYn,
+			    TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
+    			TO_CHAR(MODDATE, 'YYYY-MM-DD HH24:MI:SS') AS modDate 
+			FROM 
+			    BOARD
+    </select>
+</mapper>
+

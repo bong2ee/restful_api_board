@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bong.board.repository.MemberRepository">
+
+	<!-- 회원가입 -->
+	<insert id="signup" parameterType="com.bong.board.domain.dto.MemberDto">
+		INSERT INTO MEMBER (
+			MEMBER_NO,
+			MEMBER_ID,
+			PASSWORD,
+			MEMBER_NM,
+			EMAIL
+		) VALUES (
+			SEQ_MEMBERNO.NEXTVAL,
+			#{memberId},
+			#{password},
+			#{memberNm},
+			#{email}
+		)
+	</insert>
+
+	<!-- 회원가입 -->
+	<select id="checkIdOverlap"
+		parameterType="com.bong.board.domain.dto.MemberDto">
+		SELECT CASE WHEN COUNT(*) > 0 THEN 'N' ELSE 'Y' END AS PASS_YN
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+
+	<select id="selectMember" parameterType="com.bong.board.domain.dto.MemberDto">
+		SELECT
+		MEMBER_NO as memberNo,
+		MEMBER_ID as memberId,
+		PASSWORD as password,
+		MEMBER_NM as memberNm,
+		EMAIL as email
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+
+
+</mapper>
+
