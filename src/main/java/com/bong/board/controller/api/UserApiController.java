@@ -30,13 +30,13 @@ public class UserApiController {
 	@PostMapping(value = "/signup", produces = "application/json")
 	@ResponseBody
 	public ResponseDto<?> signup_proc (@RequestBody UserDto userDto) {
-		return userService.idOverlapCheck(userDto);
+		return userService.signupUser(userDto);
 	}
 	
 	@PostMapping(value = "/signin", produces = "application/json")
 	@ResponseBody
 	public ResponseDto<?> signin_proc (@RequestBody UserDto userDto, HttpSession session) {
-		return userService.selectUser(userDto, session);
+		return userService.signinUser(userDto, session);
 		
 	}
 	

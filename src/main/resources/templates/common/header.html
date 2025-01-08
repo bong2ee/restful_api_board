@@ -48,6 +48,11 @@
   	  			<a class="nav-link" th:href="@{/signout}">SignOut</a>
   	  		</div>
   	  	  </th:block>
+		  <th:block th:if="${userId != null}">
+	  		<div class="nav-item">
+	  			<a class="nav-link" th:href="@{/borad}">Borad</a>
+	  		</div>
+	  	  </th:block>
           <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Dropdown</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">

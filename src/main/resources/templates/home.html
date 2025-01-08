@@ -98,6 +98,13 @@
   </div>
   <!-- /.content-wrapper -->
 </div>
+
+<th:block th:if="${logout == 1}">
+		<script type="text/javascript">
+			alert("로그아웃 되었습니다.");
+			location.href = "/";
+		</script>
+</th:block>
 </body>
 <!-- 푸터 인클루드 -->
 <footer th:replace="common/footer"></footer>

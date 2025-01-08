@@ -16,24 +16,18 @@ public class UserService {
 	private UserRepository userRepository;
 	
 	
-	public int signupUser(UserDto userDto) {
-		return userRepository.signupUser(userDto);
-	}
-	
-	
-	public ResponseDto<?> idOverlapCheck(UserDto userDto) {
-	    String pass_yn = userRepository.idOverlapCheck(userDto);
+	public ResponseDto<?> signupUser(UserDto userDto) {
+		String pass_yn = userRepository.idOverlapCheck(userDto);
 
 	    if ("Y".equals(pass_yn)) {
-	        int result = signupUser(userDto);
-	        return result > 0 ? ResponseDto.createSuccess(userDto, "회원가입이 완료되었습니다.") : ResponseDto.createError("회원가입에 실패했습니다.");
+			int result = userRepository.signupUser(userDto);
+	        return result > 0 ? ResponseDto.createSuccess(userDto, "회원가입이 완료되었습니다.") : ResponseDto.createError("회원가입에 실패했습니다.");	        
         } else {
             return ResponseDto.createError("아이디가 이미 존재합니다.");
 	    }
 	}
-
-	
-	public ResponseDto<?> selectUser(UserDto userDto, HttpSession session) {
+		
+	public ResponseDto<?> signinUser(UserDto userDto, HttpSession session) {
 		
 		try {
 			UserDto uDto = userRepository.selectUser(userDto);

@@ -22,10 +22,10 @@ public class UserController {
 	
 	@GetMapping("/signout")
 	public String logout(HttpSession session, Model model) {
+		
 		String userId = (String) session.getAttribute("userId");
-		//System.out.println("로그아웃하는 아이디: " + userId);
 		session.invalidate();
-		int logout = 0;
+		int logout = 1;
 		model.addAttribute("logout", logout);
 
 		return "home";
