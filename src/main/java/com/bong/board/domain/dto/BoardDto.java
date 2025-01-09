@@ -1,6 +1,7 @@
 package com.bong.board.domain.dto;
 
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +11,10 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BoardDto {
+public class BoardDto extends PageDto {
 
     private int boardNo;         // 게시글 번호
     private int groupNo;         // 본문 번호 (증조 할머니 번호)

@@ -28,21 +28,35 @@
 	</insert>
 	
 	<select id="selectBoardList" parameterType="com.bong.board.domain.dto.BoardDto">
-			SELECT 
-			    BOARD_NO AS boardNo, 
-			    GROUP_NO AS groupNo,
-			    STEP AS step,
-			    DEPTH AS depth,
-			    VIEW_CNT AS viewCnt,
-			    TITLE AS title, 
-			    CONTENT AS content, 
-			    MEMBER_NO AS memberNo,
-			    MEMBER_ID AS memberId,
-			    DEL_YN AS delYn,
-			    TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
-    			TO_CHAR(MODDATE, 'YYYY-MM-DD HH24:MI:SS') AS modDate 
-			FROM 
-			    BOARD
+		SELECT *
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY BOARD_NO ASC) AS rn,
+				BOARD_NO AS boardNo,
+				GROUP_NO AS groupNo,
+				STEP AS step,
+				DEPTH AS depth,
+				VIEW_CNT AS viewCnt,
+				TITLE AS title,
+				CONTENT AS content,
+				MEMBER_NO AS memberNo,
+				MEMBER_ID AS memberId,
+				DEL_YN AS delYn,
+				TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
+				TO_CHAR(MODDATE, 'YYYY-MM-DD HH24:MI:SS') AS modDate
+			FROM BOARD
+		)
+		WHERE rn 
+			BETWEEN #{totalCount} - #{endRow} + 1 
+					AND  #{totalCount} - #{startRow} + 1
+		ORDER BY rn DESC
+    </select>
+    
+    <select id="selectBoardCount" resultType="int">
+        SELECT
+            COUNT(*) AS CNT
+        FROM BOARD
+        WHERE 1=1
     </select>
 </mapper>
 

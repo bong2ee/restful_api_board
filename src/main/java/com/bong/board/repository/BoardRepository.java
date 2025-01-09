@@ -11,6 +11,8 @@ public interface BoardRepository {
 
 	public int saveBoard(BoardDto boardDto);
 	
-	public List<BoardDto> selectBoardList(BoardDto boardDto);
+	public List<BoardDto> selectBoardList(BoardDto searchDto);
+	
+	public int selectBoardCount(BoardDto searchDto);
 	
 }

@@ -23,7 +23,7 @@ public class MemberController {
 	@GetMapping("/signout")
 	public String logout(HttpSession session, Model model) {
 		
-		String memberId = (String) session.getAttribute("memberId");
+		//String memberId = (String) session.getAttribute("memberId");
 		session.invalidate();
 		int logout = 1;
 		model.addAttribute("logout", logout);

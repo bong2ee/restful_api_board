@@ -19,6 +19,7 @@ import lombok.Setter;
 @ToString
 public class ListResultDto<T> {
 	
-    private int itemsCount;
+    private int itemsCount;	//list 총 갯수 
     private List<T> data;
+    
 }

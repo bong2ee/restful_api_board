@@ -1,13 +1,11 @@
 package com.bong.board.domain.dto;
 
-import org.springframework.http.HttpStatus;
-
-import lombok.Builder;
-import lombok.ToString;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

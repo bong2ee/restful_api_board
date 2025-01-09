@@ -14,20 +14,26 @@ public class BoardService {
 
 	@Autowired
 	private BoardRepository boardRepository;
-	
-	
+
+	/* 
+	 * 게시판 리스트 
+	 * 
+	 * @param searchDto 검색조건 
+	 * @return ListResultDto
+	 * */
 	public ListResultDto<BoardDto> selectBoardList(BoardDto searchDto) {
-	    List<BoardDto> dtoList = boardRepository.selectBoardList(searchDto);
 
-	    ListResultDto<BoardDto> resultDto = 
-    				ListResultDto.<BoardDto>builder()
-						        .itemsCount(dtoList.size()) 
-						        .data(dtoList) 
-						        .build();
-
-	    return resultDto;
-	}
+		int totCnt = boardRepository.selectBoardCount(searchDto);
+		searchDto.setTotalCount(totCnt);
 		
+		List<BoardDto> dtoList = boardRepository.selectBoardList(searchDto);
+
+		return ListResultDto.<BoardDto>builder()
+									.itemsCount(totCnt)
+									.data(dtoList)
+									.build();
+	}
 	
 	
+
 }

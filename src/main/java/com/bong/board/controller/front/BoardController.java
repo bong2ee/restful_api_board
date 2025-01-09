@@ -13,7 +13,11 @@ import jakarta.servlet.http.HttpSession;
 public class BoardController {
 
 	@GetMapping("/list")
-	public String boardList() {
+	public String boardList(HttpSession session, Model model) {
+		
+		String memberId = (String) session.getAttribute("memberId");
+		model.addAttribute("memberId", memberId);
+		
 		return "board/list";
 	}
 	

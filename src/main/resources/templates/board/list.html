@@ -10,31 +10,40 @@
 		<div class="content-wrapper">
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
-				<div class="container-fluid">
-					<div class="row mb-2">
-						<div class="col-sm-6">
-							<h1>jsGrid</h1>
-						</div>
-						<div class="col-sm-6">
-							<ol class="breadcrumb float-sm-right">
-								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">jsGrid</li>
-							</ol>
-						</div>
-					</div>
-				</div><!-- /.container-fluid -->
+				
 			</section>
 
 			<!-- Main content -->
 			<section class="content">
 
+				<div class="container-fluid" style="margin-bottom: 30px;">
+				    <h2 class="text-center display-5">게시판</h2>
+				    <div class="row">
+				        <div class="col-md-8 offset-md-2">
+				            <form name="searchFrm">
+								<input type="hidden" name="pageIndex">
+								<input type="hidden" name="pageSize">
+				                <div class="input-group">
+				                    <input type="search" class="form-control form-control-lg" placeholder="검색어를 입력하세요.">
+				                    <div class="input-group-append">
+				                        <button type="submit" class="btn btn-lg btn-default">
+				                            <i class="fa fa-search"></i>
+				                        </button>
+				                    </div>
+				                </div>
+				            </form>
+				        </div>
+				    </div>
+				</div>
+							
 				<div class="card">
 					<div class="card-body">
 						<div id="jsGridBody"></div>
 					</div>
-					<!--<div class="card-footer">
-						<button type="button" class="btn btn-primary float-right" onclick="flowWrite()">신규작성</button>
-					</div>-->
+					
+					<div class="card-footer" style="background-color: white;">
+						<button type="button" class="btn btn-primary float-right" onclick="writeButton()">글 작성</button>
+					</div>
 				</div>
 				
 			</section>
@@ -47,10 +56,16 @@
 	<script>
 		var setFields = [
 		    {name: "boardNo", title:"No.", width: "auto", align: "center"}
-		    , {name: "title", title:"제목", width: "auto", align: "start"}
-		    , {name: "memberId", title:"작성자" , width: "auto", align: "center"}
+		    , {name: "title", title:"제목", width: "auto", align: "center"
+			, itemTemplate: function(_, item) {
+                return '<a href="javascript:;" onclick="detail(\'' + item.boadNo + '\')">' + item.title + '</a>';}
+			}
 			, {name: "viewCnt", title:"조회수" , width: "auto", align: "center"}
-			, {name: "regDate", title:"작성일자" , width: "auto", align: "center"}
+		    , {name: "memberId", title:"작성자" , width: "auto", align: "center"}
+			, {name: "regDate", title:"작성일자" , width: "auto", align: "center"
+			, itemTemplate: function(_, item) {
+            		return moment(item.regDate).format('YYYY-MM-DD HH:mm:ss');}
+			}
 		];
 
 		const jsGridBody = $("#jsGridBody");
@@ -59,7 +74,7 @@
 		        width: "100%"
 		        , autoload: true
 		        , noDataContent: "데이터가 없습니다."
-		        , paging: false
+		        , paging: true
 		        , pageLoading: true
 		        , pageIndex: 1
 		        , pageSize: 10
@@ -71,13 +86,14 @@
 		        , pageLastText: "끝"
 		        , controller: {
 		            loadData: function (filter) {
-		               // var frm = $("form[name=frmSearch]");
+		                var frm = $("form[name=searchFrm]");
 		                var listJsonUrl = "/api/board/list";
-		                //frm.find("[name=pageIndex]").val(filter.pageIndex);
-		                //frm.find("[name=pageSize]").val(filter.pageSize);
-		                return $.getJSON(listJsonUrl, function(data) {
+		                frm.find("[name=pageIndex]").val(filter.pageIndex);
+		                frm.find("[name=pageSize]").val(filter.pageSize);
+						console.log(frm.serialize())
+		                return $.getJSON(listJsonUrl, frm.serialize(), function(data) {
 							console.log(data)
-							jsGridBody.data("itemsCount", data.itemsCount);
+							jsGridBody.data("itemsCount", data.totalCount);
 		                });
 		            },
 		        }
