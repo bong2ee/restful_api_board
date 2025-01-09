@@ -23,14 +23,28 @@
 				            <form name="searchFrm">
 								<input type="hidden" name="pageIndex">
 								<input type="hidden" name="pageSize">
-				                <div class="input-group">
-				                    <input type="search" class="form-control form-control-lg" placeholder="검색어를 입력하세요.">
-				                    <div class="input-group-append">
-				                        <button type="submit" class="btn btn-lg btn-default">
-				                            <i class="fa fa-search"></i>
-				                        </button>
-				                    </div>
-				                </div>
+								<div class="card">
+		                            <div class="card-body">
+		                                <div class="row">
+		                                    <div class="col-md-8 offset-md-2">
+		                                        <div class="input-group">
+		                                            <div class="input-group-prepend">
+		                                                <select id="searchCate" name="searchCate" class="form-control select2">
+		                                                    <option value="" selected="selected">전체</option>
+		                                                    <option value="T">제목</option>
+		                                                    <option value="C">내용</option>
+		                                                    <option value="A">제목+내용</option>
+		                                                </select>
+		                                            </div>
+		                                            <input type="search" name="keyword" class="form-control" placeholder="검색어를 입력하세요.">
+		                                            <button type="button" onclick="search();" class="btn btn-md btn-default">
+		                                                <i class="fa fa-search"></i>
+		                                            </button>
+		                                        </div>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </div>
 				            </form>
 				        </div>
 				    </div>
@@ -90,9 +104,9 @@
 		                var listJsonUrl = "/api/board/list";
 		                frm.find("[name=pageIndex]").val(filter.pageIndex);
 		                frm.find("[name=pageSize]").val(filter.pageSize);
-						console.log(frm.serialize())
+						//console.log(frm.serialize())
 		                return $.getJSON(listJsonUrl, frm.serialize(), function(data) {
-							console.log(data)
+							//console.log(data)
 							jsGridBody.data("itemsCount", data.totalCount);
 		                });
 		            },
@@ -100,6 +114,10 @@
 		        , fields: setFields
 		    });
 		});
+		
+		function search() {
+		   jsGridBody.jsGrid("loadData");
+		}
 	</script>
 </body>
 <!-- 푸터 인클루드 -->

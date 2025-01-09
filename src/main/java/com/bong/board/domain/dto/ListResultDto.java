@@ -19,7 +19,7 @@ import lombok.Setter;
 @ToString
 public class ListResultDto<T> {
 	
-    private int itemsCount;	//list 총 갯수 
+    private int itemsCount;	//list 총 갯수 - JsGrid
     private List<T> data;
     
 }

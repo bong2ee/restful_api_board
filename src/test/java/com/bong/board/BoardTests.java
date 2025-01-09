@@ -64,7 +64,7 @@ class BoardTests {
 //	}
 //
 	@Test
-	void selectBoard () {
+	void pagingTest () {
 		BoardDto searchDto = new BoardDto();
 		
 		int totalCnt =  boardRepository.selectBoardCount(searchDto);
