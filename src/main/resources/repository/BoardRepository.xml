@@ -4,6 +4,7 @@
 
 	<!-- 검색 공통쿼리 -->
 	<sql id="search">
+		AND DEPTH = 1
 		<if test='keyword !="" and keyword != null'>
 			<choose>
 				<when test='searchCate == "T"'>AND TITLE LIKE '%' || #{keyword} || '%'</when>
@@ -74,5 +75,13 @@
         WHERE 1=1
         <include refid="search"></include>
     </select>
+    
+    <select id="selectGroupMax" resultType="int">
+	    SELECT
+	    	MAX(GROUP_NO) AS groupmax
+		FROM BOARD 
+	</select>	
+	
+	
 </mapper>
 

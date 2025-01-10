@@ -14,5 +14,7 @@ public interface BoardRepository {
 	public List<BoardDto> selectBoardList(BoardDto searchDto);
 	
 	public int selectBoardCount(BoardDto searchDto);
+
+	public int selectGroupMax();
 	
 }

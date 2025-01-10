@@ -56,7 +56,7 @@
 					</div>
 					
 					<div class="card-footer" style="background-color: white;">
-						<button type="button" class="btn btn-primary float-right" onclick="writeButton()">글 작성</button>
+						<button type="button" class="btn btn-outline-primary float-right" onclick="location.href='/board/write'">글 작성</button>
 					</div>
 				</div>
 				
@@ -69,10 +69,10 @@
 
 	<script>
 		var setFields = [
-		    {name: "boardNo", title:"No.", width: "auto", align: "center"}
+		    {name: "rn", title:"No.", width: "auto", align: "center"}
 		    , {name: "title", title:"제목", width: "auto", align: "center"
 			, itemTemplate: function(_, item) {
-                return '<a href="javascript:;" onclick="detail(\'' + item.boadNo + '\')">' + item.title + '</a>';}
+                return '<a href="javascript:;" onclick="view(\'' + item.boardNo + '\')">' + item.title + '</a>';}
 			}
 			, {name: "viewCnt", title:"조회수" , width: "auto", align: "center"}
 		    , {name: "memberId", title:"작성자" , width: "auto", align: "center"}

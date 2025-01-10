@@ -21,6 +21,18 @@ public class BoardController {
 		return "board/list";
 	}
 	
+	@GetMapping("/write")
+	public String boardWrite(HttpSession session, Model model) {
+		
+		String memberId = (String) session.getAttribute("memberId");
+		model.addAttribute("memberId", memberId);
+		
+		Integer memberNo = (Integer) session.getAttribute("memberNo");
+	    model.addAttribute("memberNo", memberNo);
+	    
+		return "board/write";
+	}
+	
 	
 
 }
