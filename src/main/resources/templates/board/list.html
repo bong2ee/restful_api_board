@@ -72,7 +72,7 @@
 		    {name: "rn", title:"No.", width: "auto", align: "center"}
 		    , {name: "title", title:"제목", width: "auto", align: "center"
 			, itemTemplate: function(_, item) {
-                return '<a href="javascript:;" onclick="view(\'' + item.boardNo + '\')">' + item.title + '</a>';}
+                return '<a href="javascript:;" onclick="detail(\'' + item.boardNo + '\')">' + item.title + '</a>';}
 			}
 			, {name: "viewCnt", title:"조회수" , width: "auto", align: "center"}
 		    , {name: "memberId", title:"작성자" , width: "auto", align: "center"}
@@ -117,6 +117,10 @@
 		
 		function search() {
 		   jsGridBody.jsGrid("loadData");
+		}
+		
+		function detail(boardNo) {
+			location.href = "/board/detail?boardNo=" + boardNo;
 		}
 	</script>
 </body>

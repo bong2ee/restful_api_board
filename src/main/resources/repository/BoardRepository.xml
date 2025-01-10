@@ -13,6 +13,22 @@
 			</choose>
 		</if>
 	</sql>
+	
+	<!-- 공통 조회 컬럼 -->
+	<sql id="boardColumn">
+		BOARD_NO AS boardNo,
+		GROUP_NO AS groupNo,
+		STEP AS step,
+		DEPTH AS depth,
+		VIEW_CNT AS viewCnt,
+		TITLE AS title,
+		CONTENT AS content,
+		MEMBER_NO AS memberNo,
+		MEMBER_ID AS memberId,
+		DEL_YN AS delYn,
+		TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
+		TO_CHAR(MODDATE, 'YYYY-MM-DD HH24:MI:SS') AS modDate
+	</sql>
 
 	<!-- 게시 -->
 	<insert id="saveBoard" parameterType="com.bong.board.domain.dto.BoardDto">
@@ -45,18 +61,7 @@
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER (ORDER BY BOARD_NO ASC) AS rn,
-				BOARD_NO AS boardNo,
-				GROUP_NO AS groupNo,
-				STEP AS step,
-				DEPTH AS depth,
-				VIEW_CNT AS viewCnt,
-				TITLE AS title,
-				CONTENT AS content,
-				MEMBER_NO AS memberNo,
-				MEMBER_ID AS memberId,
-				DEL_YN AS delYn,
-				TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
-				TO_CHAR(MODDATE, 'YYYY-MM-DD HH24:MI:SS') AS modDate
+				<include refid="boardColumn"></include>
 			FROM BOARD
 			WHERE 1=1
 			<include refid="search"></include>
@@ -82,6 +87,13 @@
 		FROM BOARD 
 	</select>	
 	
-	
+	<!-- 게시글 조회 -->
+	<select id="selectBoardDetail" parameterType="com.bong.board.domain.dto.BoardDto">
+			SELECT
+				<include refid="boardColumn"></include>
+			FROM BOARD
+			WHERE 1=1
+			AND BOARD_NO = #{boardNo}
+	</select>
 </mapper>
 

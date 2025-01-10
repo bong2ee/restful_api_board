@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/header"></head> <!-- 헤더 인클루드 -->
+
+<body class="hold-transition layout-top-nav">
+	<div class="wrapper">
+
+	    <div class="content-wrapper">
+	        <!-- Content Header (Page header) -->
+	        <section class="content-header">
+	        </section>
+
+	        <!-- Main content -->
+	        <section class="content">
+	            <div class="container-fluid">
+	                <div class="row justify-content-center">
+	                    <div class="col-md-10">
+	                        <div class="card card-secondary card-outline">
+	                         
+	                            <input type="hidden" id="boardNo" name="boardNo" th:value="${boardDto.boardNo}">
+	                            
+	                            <!-- /.card-header -->
+	                            <div class="card-body">
+	                                <table class="table table-bordered">
+	                                    <tbody>
+	                                        <tr>
+	                                            <th scope="row">제목</th>
+	                                            <td><input type="text" class="form-control" id="title" readonly></td>
+												<th scope="row">조회수</th>
+												<td><input type="text" class="form-control" id="viewCnt" readonly></td>
+												                                        
+											</tr>
+	                                        <tr>
+	                                            <th scope="row">작성자</th>
+	                                            <td><input type="text" class="form-control" id="memberId" readonly></td>
+	                                            <th scope="row">작성일시</th>
+	                                            <td><input type="text" class="form-control" id="regDate" readonly></td>
+	                                        </tr>	                                    
+	                                        <tr>
+	                                            <th scope="row">내용</th>
+	                                            <td colspan="3"><div id="content" class="form-control" style="height: 500px;" readonly></div></td>
+	                                        </tr>
+	                                    </tbody>
+	                                </table>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- /.col-->
+	            </div>
+	            <!-- /.container-fluid -->
+	        </section>
+	        <!-- /.content -->
+	    </div>
+
+	</div>
+	<!-- ./wrapper -->
+
+
+	<script>
+		
+		$(document).ready(function() {
+			
+			var boardNo = $('#boardNo').val();
+			
+		    $.ajax({
+		        url: '/api/board/detail',
+		        type: 'GET',
+		        contentType: 'application/json', 
+				data: { boardNo: boardNo },
+		        dataType: 'json',  
+				success: function(r) {
+				        //console.log(r); 
+						$('#title').val(r.data.title);
+			            $('#memberId').val(r.data.memberId);
+			            $('#regDate').val(moment(r.data.regDate).format('YYYY-MM-DD HH:mm:ss'));
+			            $('#viewCnt').val(r.data.viewCnt); 
+			            $('#content').html(r.data.content);
+				    },
+		        error: function(xhr, status, error) {
+		            console.error('Error:', error);
+		            alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+		        }
+		    });
+		});
+
+
+	</script>
+</body>
+<!-- 푸터 인클루드 -->
+<footer th:replace="common/footer"></footer>
+
+</html>

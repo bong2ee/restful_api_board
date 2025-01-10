@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.bong.board.domain.dto.BoardDto;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -31,6 +33,16 @@ public class BoardController {
 	    model.addAttribute("memberNo", memberNo);
 	    
 		return "board/write";
+	}
+	
+	@GetMapping("/detail")
+	public String boardDetail(BoardDto boardDto, HttpSession session, Model model) {
+		
+		String memberId = (String) session.getAttribute("memberId");
+		model.addAttribute("memberId", memberId);
+		model.addAttribute("boardDto", boardDto);
+		
+		return "board/detail";
 	}
 	
 	

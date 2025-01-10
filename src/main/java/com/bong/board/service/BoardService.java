@@ -35,9 +35,14 @@ public class BoardService {
 									.build();
 	}
 
+	/* 
+	 * 게시글 본문&댓글 저장  
+	 * 
+	 * @param boardDto 작성내용
+	 * @return ResponseDto
+	 * */
+	
 	public ResponseDto<?> saveBoard(BoardDto boardDto) {
-		
-		System.out.println("여기오지?" + boardDto);
 		
 		if(boardDto.getDepth() == 0) {
 			
@@ -48,11 +53,23 @@ public class BoardService {
 			
 			int result = boardRepository.saveBoard(boardDto);
 			
-			//return null;
 	        return result > 0 ? ResponseDto.createSuccess(boardDto, "등록되었습니다.") : ResponseDto.createError("등록에 실패했습니다.");
 		}
 		
 		return ResponseDto.createError("시스템 오류가 발생했습니다.");
+	}
+
+	/* 
+	 * 게시글 상세 조회
+	 * 
+	 * @param searchDto 게시물 번호
+	 * @return ResponseDto
+	 * */
+	public ResponseDto<?> selectBoardDetail(BoardDto searchDto) {
+		
+		BoardDto boardDto = boardRepository.selectBoardDetail(searchDto);
+		
+		return ResponseDto.createSuccess(boardDto, null);
 	}
 	
 	

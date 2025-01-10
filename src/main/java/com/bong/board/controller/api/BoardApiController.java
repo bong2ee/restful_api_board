@@ -33,12 +33,27 @@ public class BoardApiController {
 		return boardService.selectBoardList(searchDto);
 	}
 	
+	/* 
+	 * 게시글 본문&댓글 저장  
+	 * 
+	 * @param boardDto 작성내용
+	 * @return ResponseDto
+	 * */
 	@PostMapping(value = "/saveboard", produces = "application/json")
 	@ResponseBody
 	public ResponseDto<?> saveboard (@RequestBody BoardDto boardDto) {
-		//System.out.println("데이터가 넘어오나요?"+boardDto);
-		//return "o";
 		return boardService.saveBoard(boardDto);
 		
+	}
+	
+	/* 
+	 * 게시글 상세 조회
+	 * 
+	 * @param searchDto 게시물 번호
+	 * @return ResponseDto
+	 * */
+	@GetMapping("/detail")
+	public ResponseDto<?>  selectBoardDetail(BoardDto searchDto) {
+		return boardService.selectBoardDetail(searchDto);
 	}
 }
