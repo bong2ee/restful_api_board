@@ -16,7 +16,7 @@
 	            <div class="container-fluid">
 	                <div class="row justify-content-center">
 	                    <div class="col-md-10">
-	                        <div class="card card-secondary card-outline">
+	                        <div class="card card-secondary">
 	                         
 	                            <input type="hidden" id="boardNo" name="boardNo" th:value="${boardDto.boardNo}">
 	                            
@@ -43,6 +43,11 @@
 	                                        </tr>
 	                                    </tbody>
 	                                </table>
+					
+									<div class="input-group-append mt-4">
+										<input class="form-control form-control-md" type="text" placeholder="Type a comment">										
+			                            <button type="submit" class="btn btn-outline-primary">Send</button>
+			                        </div>
 	                            </div>
 	                        </div>
 	                    </div>
