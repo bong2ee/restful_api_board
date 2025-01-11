@@ -56,4 +56,16 @@ public class BoardApiController {
 	public ResponseDto<?>  selectBoardDetail(BoardDto searchDto) {
 		return boardService.selectBoardDetail(searchDto);
 	}
+	
+	
+	/* 
+	 * 게시글 상세 댓굴 목록 조회
+	 * 
+	 * @param searchDto 게시물 본문 번호
+	 * @return ListResultDto
+	 * */
+	@GetMapping("/detailcomment")
+	public ListResultDto<BoardDto>  selectBoardDetailComment(BoardDto searchDto) {
+		return boardService.selectBoardDetailComment(searchDto);
+	}
 }

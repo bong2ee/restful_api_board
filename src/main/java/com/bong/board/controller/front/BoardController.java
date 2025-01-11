@@ -28,7 +28,6 @@ public class BoardController {
 		
 		String memberId = (String) session.getAttribute("memberId");
 		model.addAttribute("memberId", memberId);
-		
 		Integer memberNo = (Integer) session.getAttribute("memberNo");
 	    model.addAttribute("memberNo", memberNo);
 	    
@@ -39,7 +38,9 @@ public class BoardController {
 	public String boardDetail(BoardDto boardDto, HttpSession session, Model model) {
 		
 		String memberId = (String) session.getAttribute("memberId");
+		Integer memberNo = (Integer) session.getAttribute("memberNo");
 		model.addAttribute("memberId", memberId);
+		model.addAttribute("memberNo", memberNo);
 		model.addAttribute("boardDto", boardDto);
 		
 		return "board/detail";

@@ -16,7 +16,11 @@ public interface BoardRepository {
 	public int selectBoardCount(BoardDto searchDto);
 
 	public int selectGroupMax();
-
+	
+	public int selectStepMax(BoardDto searchDto);
+	
 	public BoardDto selectBoardDetail(BoardDto searchDto);
+
+	public List<BoardDto> selectBoardDetailComment(BoardDto searchDto);
 	
 }

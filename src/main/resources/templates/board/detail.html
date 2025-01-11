@@ -6,91 +6,231 @@
 <body class="hold-transition layout-top-nav">
 	<div class="wrapper">
 
-	    <div class="content-wrapper">
-	        <!-- Content Header (Page header) -->
-	        <section class="content-header">
-	        </section>
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+			</section>
 
-	        <!-- Main content -->
-	        <section class="content">
-	            <div class="container-fluid">
-	                <div class="row justify-content-center">
-	                    <div class="col-md-10">
-	                        <div class="card card-secondary">
-	                         
-	                            <input type="hidden" id="boardNo" name="boardNo" th:value="${boardDto.boardNo}">
-	                            
-	                            <!-- /.card-header -->
-	                            <div class="card-body">
-	                                <table class="table table-bordered">
-	                                    <tbody>
-	                                        <tr>
-	                                            <th scope="row">제목</th>
-	                                            <td><input type="text" class="form-control" id="title" readonly></td>
+			<!-- Main content -->
+			<section class="content">
+				<div class="container-fluid">
+					<div class="row justify-content-center">
+						<div class="col-md-10">
+							<div class="card card-secondary">
+
+								<input type="hidden" id="boardNo" name="boardNo" th:value="${boardDto.boardNo}">
+
+								<!-- /.card-header -->
+								<div class="card-body">
+									<table class="table table-bordered">
+										<tbody>
+											<tr>
+												<th scope="row">제목</th>
+												<td><input type="text" class="form-control" id="title" readonly></td>
 												<th scope="row">조회수</th>
 												<td><input type="text" class="form-control" id="viewCnt" readonly></td>
-												                                        
+
 											</tr>
-	                                        <tr>
-	                                            <th scope="row">작성자</th>
-	                                            <td><input type="text" class="form-control" id="memberId" readonly></td>
-	                                            <th scope="row">작성일시</th>
-	                                            <td><input type="text" class="form-control" id="regDate" readonly></td>
-	                                        </tr>	                                    
-	                                        <tr>
-	                                            <th scope="row">내용</th>
-	                                            <td colspan="3"><div id="content" class="form-control" style="height: 500px;" readonly></div></td>
-	                                        </tr>
-	                                    </tbody>
-	                                </table>
-					
-									<div class="input-group-append mt-4">
-										<input class="form-control form-control-md" type="text" placeholder="Type a comment">										
-			                            <button type="submit" class="btn btn-outline-primary">Send</button>
-			                        </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
-	                <!-- /.col-->
-	            </div>
-	            <!-- /.container-fluid -->
-	        </section>
-	        <!-- /.content -->
-	    </div>
+											<tr>
+												<th scope="row">작성자</th>
+												<td><input type="text" class="form-control" id="memberId" readonly></td>
+												<th scope="row">작성일시</th>
+												<td><input type="text" class="form-control" id="regDate" readonly></td>
+											</tr>
+											<tr>
+												<th scope="row">내용</th>
+												<td colspan="3">
+													<div id="content" class="form-control" style="height: 500px;"
+														readonly></div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+									<form id="commentFrm">
+										<div class="input-group-append mt-4">
+												<input type="hidden" name="memberId" th:value="${memberId}">
+												<input type="hidden" name="memberNo" th:value="${memberNo}">
+												<input type="hidden" name="depth" id="depth">
+												<input type="hidden" name="groupNo" id="groupNo">
+												<input class="form-control form-control-md" type="text" name="content"
+													placeholder="댓글을 입력하세요...">
+												<button type="button" onclick="saveComment();" class="btn btn-outline-primary">Send</button>
+										</div>
+									</form>
+									
+									
+									<div class="card">
+						            <div class="card-body p-0" id="commentList">
+						              
+						          	</div>
+						            <!-- /.card-body -->
+						          </div>
+									
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					<!-- /.col-->
+				</div>
+				<!-- /.container-fluid -->
+			</section>
+			<!-- /.content -->
+		</div>
 
 	</div>
 	<!-- ./wrapper -->
 
 
 	<script>
-		
-		$(document).ready(function() {
-			
-			var boardNo = $('#boardNo').val();
-			
-		    $.ajax({
-		        url: '/api/board/detail',
-		        type: 'GET',
-		        contentType: 'application/json', 
-				data: { boardNo: boardNo },
-		        dataType: 'json',  
-				success: function(r) {
-				        //console.log(r); 
-						$('#title').val(r.data.title);
-			            $('#memberId').val(r.data.memberId);
-			            $('#regDate').val(moment(r.data.regDate).format('YYYY-MM-DD HH:mm:ss'));
-			            $('#viewCnt').val(r.data.viewCnt); 
-			            $('#content').html(r.data.content);
-				    },
-		        error: function(xhr, status, error) {
-		            console.error('Error:', error);
-		            alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
-		        }
-		    });
+
+		$(document).ready(function () {
+			getBoardDetail();
 		});
 
+		//본문 가져오기 - 성공 시, 댓글 목록 가져오기 함수 호출
+		function getBoardDetail(groupNo) {
+			
+		var boardNo = $('#boardNo').val();
 
+		$.ajax({
+			url: '/api/board/detail',
+			type: 'GET',
+			contentType: 'application/json',
+			data: {boardNo: boardNo},
+			dataType: 'json',
+			success: function (r) {
+				//console.log(r); 
+				$('#title').val(r.data.title);
+				$('#memberId').val(r.data.memberId);
+				$('#regDate').val(moment(r.data.regDate).format('YYYY-MM-DD HH:mm:ss'));
+				$('#viewCnt').val(r.data.viewCnt);
+				$('#content').html(r.data.content);
+				
+				//댓글 입력 용
+				$('#depth').val(r.data.depth);
+				$('#groupNo').val(r.data.groupNo);
+				
+				getCommentList(r.data.groupNo);
+			},
+			error: function (xhr, status, error) {
+				console.error('Error:', error);
+				alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+			}
+		});
+		
+		}
+		
+		//댓글 목록 가져오기
+		function getCommentList(groupNo) {
+					
+		$.ajax({
+			url: '/api/board/detailcomment',
+			type: 'GET',
+			contentType: 'application/json',
+			data: {groupNo: groupNo},
+			dataType: 'json',
+			success: function (r) {
+				//console.log(r); 
+				
+		        var commentList = $('#commentList');
+				
+		        r.data.forEach(function (item) {
+					
+				var formattedRegDate = moment(item.regDate).format('YYYY-MM-DD HH:mm:ss');
+	            var row = `
+					<div id="commentBox_${item.step}">
+		                <div class="row mt-2 p-2">
+							<input type="hidden" id="reCommentOpenYn_${item.step}" value="N">
+		                    <div class="col-6">${item.content}</div>
+		                    <div class="col-2">${item.memberId}</div>
+							<div class="col-2">${formattedRegDate}</div>
+		                    <div class="text-right py-0 align-middle col-2">
+		                        <div class="btn-group btn-group-sm">
+		                            <a class="btn btn-info" onclick="getReCommentList(\'' + '${item.step}' + '\')"><i class="fas fa-eye"></i></a>
+		                            <a class="btn btn-danger"><i class="fas fa-trash"></i></a>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>	
+	            `;
+	            commentList.append(row)
+				})
+				
+			},
+			error: function (xhr, status, error) {
+				console.error('Error:', error);
+				alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+			}
+		});
+		
+		}
+		
+		//댓글 상세 - 대댓글 가져오기
+		function getReCommentList(step) {
+			
+			let openYn = $(`#reCommentOpenYn_${step}`).val()
+			
+			if (openYn == "Y") {
+				$(`#reCommentBox_${step}`).remove();	
+				$(`#reCommentOpenYn_${step}`).val("N")			
+			} else {
+				var row = `
+					<div id="reCommentBox_${step}">
+				        <div class="row ml-3 mt-2 p-2">
+				            <div class="col-6">내용</div>
+				            <div class="col-2">작성자임</div>
+							<div class="col-2">작성일시</div>
+				            <div class="text-right py-0 align-middle col-2">
+				                <div class="btn-group btn-group-sm">
+				                    <button type="button" class="btn btn-xs btn-danger"><i class="fas fa-trash fa-sm"></i></button>
+				                </div>
+				            </div>
+				        </div>
+						<div class="input-group-append mt-1 pl-3 pr-3">
+								<input class="form-control form-control-sm" type="text" name="content"
+									placeholder="대댓글을 입력하세요...">
+								<button type="button" onclick="saveReComment();" class="btn btn-sm btn-outline-primary">Send</button>
+						</div>
+					</div>
+				`;
+				$(`#commentBox_${step}`).append(row);
+				$(`#reCommentOpenYn_${step}`).val("Y");
+			}		
+		}
+
+		//댓글 저장
+		function saveComment() {
+					
+		  let frm = $('#commentFrm');
+	      let formData = new FormData(frm.get(0));
+		  
+		  // FormData를 일반 객체로 변환
+  	      let data = {};
+  	      formData.forEach((value, key) => {
+  	          data[key] = value;
+  	      });
+  		  //console.log(data)
+	
+		  $.ajax({
+		      url: '/api/board/saveboard', 
+		      type: 'POST',
+		      contentType: 'application/json', 
+		      dataType: 'json', 
+		      data: JSON.stringify(data),
+		      success: function(response) {
+				  if (response.status === 'success') {
+					  var groupNo = $('#groupNo').val();
+					  getCommentList(groupNo);
+		          } 
+		      },
+		      error: function(xhr, status, error) {
+		          console.error('Error:', error); 
+				  alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+		      }
+		  });
+		}
 	</script>
 </body>
 <!-- 푸터 인클루드 -->

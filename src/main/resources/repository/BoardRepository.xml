@@ -81,11 +81,21 @@
         <include refid="search"></include>
     </select>
     
+    <!-- 본문 번호 최대값 -->
     <select id="selectGroupMax" resultType="int">
 	    SELECT
 	    	MAX(GROUP_NO) AS groupmax
 		FROM BOARD 
 	</select>	
+	
+	<!-- 댓글 번호 최대값 -->
+	<select id="selectStepMax" resultType="int" parameterType="com.bong.board.domain.dto.BoardDto">
+	    SELECT
+	    	MAX(STEP) AS stepmax
+		FROM BOARD 
+		WHERE 1=1
+		AND GROUP_NO = #{groupNo}
+	</select>
 	
 	<!-- 게시글 조회 -->
 	<select id="selectBoardDetail" parameterType="com.bong.board.domain.dto.BoardDto">
@@ -94,6 +104,17 @@
 			FROM BOARD
 			WHERE 1=1
 			AND BOARD_NO = #{boardNo}
+	</select>
+	
+	<!-- 게시글 조회 -->
+	<select id="selectBoardDetailComment" parameterType="com.bong.board.domain.dto.BoardDto">
+			SELECT
+				<include refid="boardColumn"></include>
+			FROM BOARD
+			WHERE 1=1
+			AND DEPTH = 2
+			AND GROUP_NO = #{groupNo}
+			ORDER BY REGDATE ASC 
 	</select>
 </mapper>
 

@@ -44,19 +44,32 @@ public class BoardService {
 	
 	public ResponseDto<?> saveBoard(BoardDto boardDto) {
 		
-		if(boardDto.getDepth() == 0) {
+		//System.out.println(boardDto);
+		
+		if(boardDto.getDepth() == 0) { // 본문 작성
 			
 			int groupMax = boardRepository.selectGroupMax();
 			boardDto.setGroupNo(groupMax+ 1);
-			boardDto.setDepth(1);
+			boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
 			boardDto.setDelYn("N");
 			
 			int result = boardRepository.saveBoard(boardDto);
-			
 	        return result > 0 ? ResponseDto.createSuccess(boardDto, "등록되었습니다.") : ResponseDto.createError("등록에 실패했습니다.");
-		}
 		
-		return ResponseDto.createError("시스템 오류가 발생했습니다.");
+		} else { // 댓글 작성
+		
+			int stepMax = boardRepository.selectStepMax(boardDto);
+			boardDto.setStep(stepMax + 1);
+			boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
+			boardDto.setTitle("comment");
+			boardDto.setDelYn("N");
+		
+			int result = boardRepository.saveBoard(boardDto);
+	        return result > 0 ? ResponseDto.createSuccess(boardDto, "등록되었습니다.") : ResponseDto.createError("등록에 실패했습니다.");
+		
+		} 
+			
+		//return ResponseDto.createError("시스템 오류가 발생했습니다.");
 	}
 
 	/* 
@@ -70,6 +83,19 @@ public class BoardService {
 		BoardDto boardDto = boardRepository.selectBoardDetail(searchDto);
 		
 		return ResponseDto.createSuccess(boardDto, null);
+	}
+
+	/* 
+	 * 게시글 상세 댓굴 목록 조회
+	 * 
+	 * @param searchDto 게시물 본문 번호
+	 * @return ListResultDto
+	 * */
+	public ListResultDto<BoardDto> selectBoardDetailComment(BoardDto searchDto) {
+		List<BoardDto> dtoList = boardRepository.selectBoardDetailComment(searchDto);
+		return ListResultDto.<BoardDto>builder()
+									.data(dtoList)
+									.build();
 	}
 	
 	
