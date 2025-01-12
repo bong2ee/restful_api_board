@@ -107,21 +107,26 @@
 	
 	<!-- 게시글 조회 -->
 	<select id="selectBoardDetail" parameterType="com.bong.board.domain.dto.BoardDto">
-			SELECT
-				<include refid="boardColumn"></include>
-			FROM BOARD
-			WHERE 1=1
-			AND BOARD_NO = #{boardNo}
+		SELECT
+			<include refid="boardColumn"></include>
+		FROM BOARD
+		WHERE 1=1
+		AND BOARD_NO = #{boardNo}
 	</select>
 	
 	<!-- 댓글 조회 -->
 	<select id="selectCommentList" parameterType="com.bong.board.domain.dto.BoardDto">
-			SELECT
-				<include refid="boardColumn"></include>
-			FROM BOARD
-			WHERE 1=1
-			<include refid="search"></include>
-			ORDER BY REGDATE ASC 
+		SELECT
+			<include refid="boardColumn"></include>
+		FROM BOARD
+		WHERE 1=1
+		<include refid="search"></include>
+		ORDER BY REGDATE ASC 
 	</select>
+	
+	<!-- 게시글 조회 수 -->
+	<update id="updateViewCnt" parameterType="com.bong.board.domain.dto.BoardDto">
+		UPDATE BOARD SET VIEW_CNT = VIEW_CNT + 1 WHERE BOARD_NO = #{boardNo}
+	</update>
 </mapper>
 
