@@ -31,9 +31,9 @@ public class BoardController {
 	public String boardWrite(Model model) {
 		
 		String memberId = (String) session.getAttribute("memberId");
-		model.addAttribute("memberId", memberId);
 		Integer memberNo = (Integer) session.getAttribute("memberNo");
-	    model.addAttribute("memberNo", memberNo);
+		model.addAttribute("memberId", memberId);
+		model.addAttribute("memberNo", memberNo);
 	    
 		return "board/write";
 	}
