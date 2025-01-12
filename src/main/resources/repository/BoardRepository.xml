@@ -4,7 +4,15 @@
 
 	<!-- 검색 공통쿼리 -->
 	<sql id="search">
-		AND DEPTH = 1
+		<if test='groupNo != 0'>
+			AND GROUP_NO = #{groupNo}
+		</if>
+		<if test='depth != 0'>
+			AND DEPTH = #{depth}
+		</if>
+		<if test='step != 0'>
+			AND STEP = #{step}
+		</if>
 		<if test='keyword !="" and keyword != null'>
 			<choose>
 				<when test='searchCate == "T"'>AND TITLE LIKE '%' || #{keyword} || '%'</when>
@@ -94,7 +102,7 @@
 	    	MAX(STEP) AS stepmax
 		FROM BOARD 
 		WHERE 1=1
-		AND GROUP_NO = #{groupNo}
+		<include refid="search"></include>
 	</select>
 	
 	<!-- 게시글 조회 -->
@@ -106,14 +114,13 @@
 			AND BOARD_NO = #{boardNo}
 	</select>
 	
-	<!-- 게시글 조회 -->
-	<select id="selectBoardDetailComment" parameterType="com.bong.board.domain.dto.BoardDto">
+	<!-- 댓글 조회 -->
+	<select id="selectCommentList" parameterType="com.bong.board.domain.dto.BoardDto">
 			SELECT
 				<include refid="boardColumn"></include>
 			FROM BOARD
 			WHERE 1=1
-			AND DEPTH = 2
-			AND GROUP_NO = #{groupNo}
+			<include refid="search"></include>
 			ORDER BY REGDATE ASC 
 	</select>
 </mapper>

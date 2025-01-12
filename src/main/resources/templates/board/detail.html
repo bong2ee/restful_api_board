@@ -126,7 +126,7 @@
 		function getCommentList(groupNo) {
 					
 		$.ajax({
-			url: '/api/board/detailcomment',
+			url: '/api/board/commentList',
 			type: 'GET',
 			contentType: 'application/json',
 			data: {groupNo: groupNo},
@@ -135,11 +135,11 @@
 				//console.log(r); 
 				
 		        var commentList = $('#commentList');
-				
+				var row = "";
 		        r.data.forEach(function (item) {
 					
 				var formattedRegDate = moment(item.regDate).format('YYYY-MM-DD HH:mm:ss');
-	            var row = `
+	            row += `
 					<div id="commentBox_${item.step}">
 		                <div class="row mt-2 p-2">
 							<input type="hidden" id="reCommentOpenYn_${item.step}" value="N">
@@ -155,8 +155,9 @@
 		                </div>
 					</div>	
 	            `;
-	            commentList.append(row)
+	            
 				})
+				commentList.html(row)
 				
 			},
 			error: function (xhr, status, error) {
@@ -188,11 +189,15 @@
 				                </div>
 				            </div>
 				        </div>
+						<form id="reCommentFrm_${step}">
 						<div class="input-group-append mt-1 pl-3 pr-3">
+							<input type="hidden" name="groupNo" id="reGroupNo_${step}">
+							<input type="hidden" name="step" id="step" value="${step}">
 								<input class="form-control form-control-sm" type="text" name="content"
 									placeholder="대댓글을 입력하세요...">
-								<button type="button" onclick="saveReComment();" class="btn btn-sm btn-outline-primary">Send</button>
+								<button type="button" onclick="saveReComment(${step});" class="btn btn-sm btn-outline-primary">Send</button>
 						</div>
+						</form>
 					</div>
 				`;
 				$(`#commentBox_${step}`).append(row);
@@ -206,7 +211,6 @@
 		  let frm = $('#commentFrm');
 	      let formData = new FormData(frm.get(0));
 		  
-		  // FormData를 일반 객체로 변환
   	      let data = {};
   	      formData.forEach((value, key) => {
   	          data[key] = value;
@@ -214,7 +218,7 @@
   		  //console.log(data)
 	
 		  $.ajax({
-		      url: '/api/board/saveboard', 
+		      url: '/api/board/save', 
 		      type: 'POST',
 		      contentType: 'application/json', 
 		      dataType: 'json', 
@@ -230,6 +234,37 @@
 				  alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
 		      }
 		  });
+		}
+		
+		//대댓글 저장
+		function saveReComment(step) {
+		  
+		  let frm = $(`#reCommentFrm_${step}`);	  
+		  
+  	      let data = {
+			groupNo : $('#groupNo').val(),
+			step : step,
+			content :  frm.find("[name=content]").val()
+		  };
+		  
+		  $.ajax({
+  		      url: '/api/board/save', 
+  		      type: 'POST',
+  		      contentType: 'application/json', 
+  		      dataType: 'json', 
+  		      data: JSON.stringify(data),
+  		      success: function(response) {
+  				  if (response.status === 'success') {
+  					  var groupNo = $('#groupNo').val();
+  					  getCommentList(groupNo);
+  		          } 
+  		      },
+  		      error: function(xhr, status, error) {
+  		          console.error('Error:', error); 
+  				  alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+  		      }
+  		  });
+		  
 		}
 	</script>
 </body>

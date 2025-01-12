@@ -21,6 +21,6 @@ public interface BoardRepository {
 	
 	public BoardDto selectBoardDetail(BoardDto searchDto);
 
-	public List<BoardDto> selectBoardDetailComment(BoardDto searchDto);
+	public List<BoardDto> selectCommentList(BoardDto searchDto);
 	
 }

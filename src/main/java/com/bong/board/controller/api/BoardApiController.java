@@ -12,6 +12,7 @@ import com.bong.board.domain.dto.ListResultDto;
 import com.bong.board.domain.dto.ResponseDto;
 import com.bong.board.service.BoardService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class BoardApiController {
 	 * @param boardDto 작성내용
 	 * @return ResponseDto
 	 * */
-	@PostMapping(value = "/saveboard", produces = "application/json")
+	@PostMapping(value = "/save", produces = "application/json")
 	@ResponseBody
 	public ResponseDto<?> saveboard (@RequestBody BoardDto boardDto) {
 		return boardService.saveBoard(boardDto);
@@ -64,8 +65,8 @@ public class BoardApiController {
 	 * @param searchDto 게시물 본문 번호
 	 * @return ListResultDto
 	 * */
-	@GetMapping("/detailcomment")
-	public ListResultDto<BoardDto>  selectBoardDetailComment(BoardDto searchDto) {
-		return boardService.selectBoardDetailComment(searchDto);
+	@GetMapping("/commentList")
+	public ListResultDto<BoardDto> selectCommentList(BoardDto searchDto) {
+		return boardService.selectCommentList(searchDto);
 	}
 }
