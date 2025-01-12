@@ -106,14 +106,17 @@ public class BoardService {
 	}
 
 	/* 
-	 * 게시글 상세 댓글 목록 조회
+	 * 게시글 상세 댓글 & 대댓글 목록 조회
 	 * 
-	 * @param searchDto 게시물 본문 번호
+	 * @param searchDto 게시물 본문 번호, 댓글 번호
 	 * @return ListResultDto
 	 * */
 	public ListResultDto<BoardDto> selectCommentList(BoardDto searchDto) {
 		
 		searchDto.setDepth(2);
+		if (searchDto.getStep() > 0) { //대댓글 불러오기
+			searchDto.setDepth(3);
+		}
 		List<BoardDto> dtoList = boardRepository.selectCommentList(searchDto);
 		
 		return ListResultDto.<BoardDto>builder()

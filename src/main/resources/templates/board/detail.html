@@ -136,6 +136,13 @@
 				
 		        var commentList = $('#commentList');
 				var row = "";
+				if(r.data.length == 0) {
+					row += `
+				        <div class="row ml-3 mt-2 p-2">
+				            <div class="col-12 text-center">댓글이 없습니다.</div>
+				        </div>
+		            `;
+				}
 		        r.data.forEach(function (item) {
 					
 				var formattedRegDate = moment(item.regDate).format('YYYY-MM-DD HH:mm:ss');
@@ -154,6 +161,11 @@
 		                    </div>
 		                </div>
 					</div>	
+					
+					<div id="reCommentList_${item.step}">
+		              
+		          	</div>
+					
 	            `;
 	            
 				})
@@ -169,42 +181,82 @@
 		}
 		
 		//댓글 상세 - 대댓글 가져오기
-		function getReCommentList(step) {
+		function getReCommentList(step) {	
+		var groupNo = $('#groupNo').val();
+		let openYn = $(`#reCommentOpenYn_${step}`).val()
+		
+		if (openYn == "Y") {
+			$(`#reCommentList_${step}`).hide();
+			$(`#reCommentOpenYn_${step}`).val("N")		
 			
-			let openYn = $(`#reCommentOpenYn_${step}`).val()
-			
-			if (openYn == "Y") {
-				$(`#reCommentBox_${step}`).remove();	
-				$(`#reCommentOpenYn_${step}`).val("N")			
-			} else {
-				var row = `
-					<div id="reCommentBox_${step}">
-				        <div class="row ml-3 mt-2 p-2">
-				            <div class="col-6">내용</div>
-				            <div class="col-2">작성자임</div>
-							<div class="col-2">작성일시</div>
-				            <div class="text-right py-0 align-middle col-2">
-				                <div class="btn-group btn-group-sm">
-				                    <button type="button" class="btn btn-xs btn-danger"><i class="fas fa-trash fa-sm"></i></button>
-				                </div>
-				            </div>
-				        </div>
-						<form id="reCommentFrm_${step}">
-						<div class="input-group-append mt-1 pl-3 pr-3">
-							<input type="hidden" name="groupNo" id="reGroupNo_${step}">
-							<input type="hidden" name="step" id="step" value="${step}">
-								<input class="form-control form-control-sm" type="text" name="content"
-									placeholder="대댓글을 입력하세요...">
-								<button type="button" onclick="saveReComment(${step});" class="btn btn-sm btn-outline-primary">Send</button>
+		} else {
+			$.ajax({
+				url: '/api/board/commentList',
+				type: 'GET',
+				contentType: 'application/json',
+				data: {
+					step: step,
+					groupNo: groupNo
+				},
+				dataType: 'json',
+				success: function (r) {
+					var reCommentList = $(`#reCommentList_${step}`);
+					var row = "";
+					
+					if(r.data.length == 0) {
+						row += `
+					        <div class="row ml-3 mt-2 p-2">
+					            <div class="col-12 text-center">대댓글이 없습니다.</div>
+					        </div>
+			            `;
+					}
+										
+			        r.data.forEach(function (item) {
+							
+					var formattedRegDate = moment(item.regDate).format('YYYY-MM-DD HH:mm:ss');
+		            row += `
+						<div id="reCommentBox_${item.step}">
+					        <div class="row ml-3 mt-2 p-2">
+					            <div class="col-6">${item.content}</div>
+					            <div class="col-2">${item.memberId}</div>
+								<div class="col-2">${formattedRegDate}</div>
+					            <div class="text-right py-0 align-middle col-2">
+					                <div class="btn-group btn-group-sm">
+					                    <button type="button" class="btn btn-xs btn-danger"><i class="fas fa-trash fa-sm"></i></button>
+					                </div>
+					            </div>
+					        </div>
 						</div>
-						</form>
+		            `;
+		             		
+					}) // foreach 끝
+					
+					row += `
+					<form id="reCommentFrm_${step}">
+					<div class="input-group-append mt-1 pl-3 pr-3">
+						<input type="hidden" name="groupNo" id="reGroupNo_${step}">
+						<input type="hidden" name="step" id="step" value="${step}">
+							<input class="form-control form-control-sm" type="text" name="content"
+								placeholder="대댓글을 입력하세요...">
+							<button type="button" onclick="saveReComment(${step});" class="btn btn-sm btn-outline-primary">Send</button>
 					</div>
-				`;
-				$(`#commentBox_${step}`).append(row);
-				$(`#reCommentOpenYn_${step}`).val("Y");
-			}		
-		}
+					</form>
+					`;
+					
+					$(reCommentList).html(row);
+					$(`#reCommentList_${step}`).show();
+					$(`#reCommentOpenYn_${step}`).val("Y");
+				},
+				error: function (xhr, status, error) {
+					console.error('Error:', error);
+					alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+				}
+			})
+						
+		} //else 
 
+		}
+		
 		//댓글 저장
 		function saveComment() {
 					
@@ -255,8 +307,8 @@
   		      data: JSON.stringify(data),
   		      success: function(response) {
   				  if (response.status === 'success') {
-  					  var groupNo = $('#groupNo').val();
-  					  getCommentList(groupNo);
+					  $(`#reCommentOpenYn_${step}`).val("N");
+  					  getReCommentList(step);
   		          } 
   		      },
   		      error: function(xhr, status, error) {

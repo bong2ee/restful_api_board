@@ -60,9 +60,9 @@ public class BoardApiController {
 	
 	
 	/* 
-	 * 게시글 상세 댓굴 목록 조회
+	 * 게시글 상세 댓글 & 대댓글 목록 조회
 	 * 
-	 * @param searchDto 게시물 본문 번호
+	 * @param searchDto 게시물 본문 번호, 댓글 번호
 	 * @return ListResultDto
 	 * */
 	@GetMapping("/commentList")
