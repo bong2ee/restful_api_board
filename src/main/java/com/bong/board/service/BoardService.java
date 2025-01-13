@@ -49,12 +49,11 @@ public class BoardService {
 	}
 
 	/* 
-	 * 게시글 본문&댓글 저장  
+	 * 게시글 본문&댓글&대댓글 저장  
 	 * 
 	 * @param boardDto 작성내용
 	 * @return ResponseDto
 	 * */
-	
 	public ResponseDto<?> saveBoard(BoardDto boardDto) {	
 		
 		String memberId = (String) session.getAttribute("memberId");
@@ -71,24 +70,25 @@ public class BoardService {
 			
 		} else { 
 			
-			// 본문 작성
+			
 			if (boardDto.getDepth() == 0) {  
 			
-			int groupMax = boardRepository.selectGroupMax();
-			boardDto.setGroupNo(groupMax+ 1);
-			boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
-			boardDto.setDelYn("N");
+				// 본문 작성
+				int groupMax = boardRepository.selectGroupMax();
+				boardDto.setGroupNo(groupMax+ 1);
+				boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
+				boardDto.setDelYn("N");
 				
 			} else {
 			
-			// 댓글 작성
-			BoardDto searchDto = new BoardDto();
-			searchDto.setGroupNo(boardDto.getGroupNo());
-			int stepMax = boardRepository.selectStepMax(searchDto);
-			boardDto.setStep(stepMax + 1);
-			boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
-			boardDto.setTitle("comment");
-			boardDto.setDelYn("N");
+				// 댓글 작성
+				BoardDto searchDto = new BoardDto();
+				searchDto.setGroupNo(boardDto.getGroupNo());
+				int stepMax = boardRepository.selectStepMax(searchDto);
+				boardDto.setStep(stepMax + 1);
+				boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
+				boardDto.setTitle("comment");
+				boardDto.setDelYn("N");
 			
 			}
 		} 
@@ -132,6 +132,12 @@ public class BoardService {
 									.build();
 	}
 
+	/*
+	 * 게시판 Summernote 이미지 파일 저장
+	 * 
+	 * @param file 파일
+	 * return jsonObject
+	 * */
 	public JsonObject saveSummernoteImg(MultipartFile file) {
 		JsonObject jsonObject = new JsonObject();
 		String fileRoot = "C:\\summernoteImg\\"; //파일이 저장될 경로 설정
@@ -145,7 +151,7 @@ public class BoardService {
 			InputStream fileStream = file.getInputStream();
 			FileUtils.copyInputStreamToFile(fileStream, targetFile);
 			jsonObject.addProperty("url", "/summernoteImg/"+saveFileName);
-			jsonObject.addProperty("responseCode", "succcess");
+			jsonObject.addProperty("responseCode", "success");
 		} catch(IOException e) {
 			FileUtils.deleteQuietly(targetFile);
 			jsonObject.addProperty("responseCode", "error");
@@ -153,6 +159,11 @@ public class BoardService {
 		}	
 		
 		return jsonObject;
+	}
+
+	public ResponseDto<?> editBoard(BoardDto boardDto) {
+		int result = boardRepository.editBoard(boardDto);
+        return result > 0 ? ResponseDto.createSuccess(boardDto, "수정되었습니다.") : ResponseDto.createError("수정에 실패했습니다.");
 	}
 	
 	

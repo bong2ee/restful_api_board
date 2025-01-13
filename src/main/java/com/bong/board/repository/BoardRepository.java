@@ -24,5 +24,7 @@ public interface BoardRepository {
 	public List<BoardDto> selectCommentList(BoardDto searchDto);
 
 	public void updateViewCnt(BoardDto searchDto);
+
+	public int editBoard(BoardDto boardDto);
 	
 }

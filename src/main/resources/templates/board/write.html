@@ -20,11 +20,9 @@
 		                    <div class="card card-secondary">
 		                        
 		                        <form id="writeFrm" name="writeFrm">
-		                            <input type="hidden" name="memberId" th:value="${memberId}">
-		                            <input type="hidden" name="memberNo" th:value="${memberNo}">
-		                            
 		                            <!-- /.card-header -->
 		                            <div class="card-body">
+										<input type="hidden" name="boardNo" id="boardNo" th:value="${boardDto.boardNo}" />
 		                                <div class="form-group row">
 		                                    <label for="title" class="col-sm-2 col-form-label">제목</label>
 		                                    <div class="col-sm-10">
@@ -43,7 +41,7 @@
 		                            <div class="card-footer" style="background-color: white;">
 		                                <button type="button" class="btn btn-outline-dark float-left" onclick="cancle();">취소</button>
 		                                <button type="button" class="btn btn-outline-primary float-right" onclick="saveBoard();">등록</button>
-		                            </div>
+									</div>
 		                        </form>
 		                    </div>
 		                </div>
@@ -93,7 +91,35 @@
 		            },
 		        },
 		    });
+			
+			let boardNo = $('#boardNo').val();
+			if(boardNo != 0) {
+				getBoardDetail(boardNo);
+			}
+			
 		});
+		
+		//수정 시 본문 내용 가져오기
+		function getBoardDetail(boardNo) {
+		$.ajax({
+			url: '/api/board/detail',
+			type: 'GET',
+			contentType: 'application/json',
+			data: {boardNo: boardNo},
+			dataType: 'json',
+			success: function (r) {
+				//console.log(r); 
+				$('#title').val(r.data.title);
+				$('#editor').summernote('code', r.data.content);
+			},
+			error: function (xhr, status, error) {
+				console.error('Error:', error);
+				alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+			}
+		});
+		
+		}
+		
 
 		//서머노트 이미지
 		function saveSummernoteImg(file, editor) {
@@ -138,7 +164,8 @@
 		      data: JSON.stringify(data),
 		      success: function(response) {
 				  if (response.status === 'success') {
-		              location.href = "/board/list";
+					  alert(response.message);
+		              location.href = "/board/list"
 		          } 
 		      },
 		      error: function(xhr, status, error) {

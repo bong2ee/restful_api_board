@@ -28,13 +28,14 @@ public class BoardController {
 	}
 	
 	@GetMapping("/write")
-	public String boardWrite(Model model) {
+	public String boardWrite(BoardDto boardDto, Model model) {
 		
 		String memberId = (String) session.getAttribute("memberId");
 		Integer memberNo = (Integer) session.getAttribute("memberNo");
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("memberNo", memberNo);
-	    
+		model.addAttribute("boardDto", boardDto);
+		
 		return "board/write";
 	}
 	

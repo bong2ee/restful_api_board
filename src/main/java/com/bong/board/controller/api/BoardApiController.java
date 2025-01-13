@@ -48,10 +48,9 @@ public class BoardApiController {
 	@PostMapping(value = "/save", produces = "application/json")
 	@ResponseBody
 	public ResponseDto<?> saveboard (@RequestBody BoardDto boardDto) {
-		return boardService.saveBoard(boardDto);
-		
+		return boardDto.getBoardNo() != 0 ? boardService.editBoard(boardDto) : boardService.saveBoard(boardDto);
 	}
-	
+		
 	/* 
 	 * 게시글 상세 조회
 	 * 
@@ -62,7 +61,6 @@ public class BoardApiController {
 	public ResponseDto<?>  selectBoardDetail(BoardDto searchDto) {
 		return boardService.selectBoardDetail(searchDto);
 	}
-	
 	
 	/* 
 	 * 게시글 상세 댓글 & 대댓글 목록 조회
@@ -75,7 +73,12 @@ public class BoardApiController {
 		return boardService.selectCommentList(searchDto);
 	}
 	
-	
+	/*
+	 * 게시판 Summernote 이미지 파일 저장
+	 * 
+	 * @param file 파일
+	 * return jsonObject
+	 * */
 	@PostMapping(value="/saveSummernoteImg", produces = "application/json")
 	public @ResponseBody String saveSummernoteImg(@RequestParam("file") MultipartFile file) {
 		JsonObject jsonObject = boardService.saveSummernoteImg(file);

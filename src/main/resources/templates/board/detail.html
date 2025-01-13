@@ -50,8 +50,8 @@
 									<div class="row mt-1 p-2" style="background-color: white;">
 									    <div class="col-9"></div>
 									    <div class="col-3 d-flex justify-content-end">
-									        <button type="button" class="btn btn-outline-dark ml-2" onclick="location.href='/board/write'">수정</button>
-									        <button type="button" class="btn btn-outline-danger ml-2" onclick="location.href='/board/write'">삭제</button>
+									        <button type="button" class="btn btn-outline-dark ml-2" onclick="location.href='/board/write?boardNo=' + document.getElementById('boardNo').value">수정</button>
+											<button type="button" class="btn btn-outline-danger ml-2" onclick="location.href='/board/write'">삭제</button>
 									    </div>
 									</div>
 							
@@ -101,7 +101,7 @@
 		});
 
 		//본문 가져오기 - 성공 시, 댓글 목록 가져오기 함수 호출
-		function getBoardDetail(groupNo) {
+		function getBoardDetail() {
 			
 		var boardNo = $('#boardNo').val();
 
@@ -331,6 +331,7 @@
   		  });
 		  
 		}
+		
 	</script>
 </body>
 <!-- 푸터 인클루드 -->
