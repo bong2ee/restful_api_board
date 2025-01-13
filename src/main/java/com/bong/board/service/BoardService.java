@@ -100,7 +100,6 @@ public class BoardService {
 	public ResponseDto<?> selectBoardDetail(BoardDto searchDto) {
 		
 		searchDto.setDepth(1);
-		System.out.println(searchDto);
 		boardRepository.updateViewCnt(searchDto);
 		BoardDto boardDto = boardRepository.selectBoardDetail(searchDto);
 		
