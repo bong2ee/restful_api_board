@@ -20,7 +20,14 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 mybatis:
   mapper-locations: classpath:repository/*.xml  # XML 파일 경로
   type-aliases-package: com.bong.board.domain.dto  # DTO 패키지 경로
+
+
+  

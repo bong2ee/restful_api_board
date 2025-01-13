@@ -1,14 +1,21 @@
 package com.bong.board.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bong.board.domain.dto.BoardDto;
 import com.bong.board.domain.dto.ListResultDto;
 import com.bong.board.domain.dto.ResponseDto;
 import com.bong.board.repository.BoardRepository;
+import com.google.gson.JsonObject;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -123,6 +130,29 @@ public class BoardService {
 		return ListResultDto.<BoardDto>builder()
 									.data(dtoList)
 									.build();
+	}
+
+	public JsonObject saveSummernoteImg(MultipartFile file) {
+		JsonObject jsonObject = new JsonObject();
+		String fileRoot = "C:\\summernoteImg\\"; //파일이 저장될 경로 설정
+		String originalFileName = file.getOriginalFilename(); //실제 파일명 
+		String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); //확장자
+		String saveFileName = UUID.randomUUID()+extension; //저정할 파일명 --> UUID+확장자
+			
+		File targetFile = new File(fileRoot+saveFileName);
+		
+		try {
+			InputStream fileStream = file.getInputStream();
+			FileUtils.copyInputStreamToFile(fileStream, targetFile);
+			jsonObject.addProperty("url", "/summernoteImg/"+saveFileName);
+			jsonObject.addProperty("responseCode", "succcess");
+		} catch(IOException e) {
+			FileUtils.deleteQuietly(targetFile);
+			jsonObject.addProperty("responseCode", "error");
+			e.printStackTrace();
+		}	
+		
+		return jsonObject;
 	}
 	
 	

@@ -4,13 +4,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import org.springframework.web.multipart.MultipartFile;
 import com.bong.board.domain.dto.BoardDto;
 import com.bong.board.domain.dto.ListResultDto;
 import com.bong.board.domain.dto.ResponseDto;
 import com.bong.board.service.BoardService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +73,12 @@ public class BoardApiController {
 	@GetMapping("/commentList")
 	public ListResultDto<BoardDto> selectCommentList(BoardDto searchDto) {
 		return boardService.selectCommentList(searchDto);
+	}
+	
+	
+	@PostMapping(value="/saveSummernoteImg", produces = "application/json")
+	public @ResponseBody String saveSummernoteImg(@RequestParam("file") MultipartFile file) {
+		JsonObject jsonObject = boardService.saveSummernoteImg(file);
+		return new Gson().toJson(jsonObject);
 	}
 }
