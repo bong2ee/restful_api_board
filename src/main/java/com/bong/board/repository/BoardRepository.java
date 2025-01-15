@@ -26,5 +26,7 @@ public interface BoardRepository {
 	public void updateViewCnt(BoardDto searchDto);
 
 	public int editBoard(BoardDto boardDto);
+
+	public int deleteBoard(BoardDto boardDto);
 	
 }
