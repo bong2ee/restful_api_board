@@ -11,7 +11,15 @@ import jakarta.servlet.http.HttpSession;
 public class MemberController {
 
 	@GetMapping("/signin")
-	public String signin() {
+	public String signin(HttpSession session, Model model) {
+		
+		if(session != null) {
+			String loginMessage = (String) session.getAttribute("loginMessage");
+			if (loginMessage != null) {
+	            model.addAttribute("loginMessage", loginMessage);
+	            session.removeAttribute("loginMessage");
+	        }
+		}
 		return "member/signin";
 	}
 	

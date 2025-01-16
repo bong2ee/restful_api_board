@@ -29,5 +29,10 @@ mybatis:
   mapper-locations: classpath:repository/*.xml  # XML 파일 경로
   type-aliases-package: com.bong.board.domain.dto  # DTO 패키지 경로
 
+logging:
+  level:
+    com.bong.board.util.LoggerInterceptor: DEBUG
+
+
 
   

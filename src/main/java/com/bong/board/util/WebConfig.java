@@ -1,6 +1,7 @@
 package com.bong.board.util;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,5 +17,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/summernoteImg/**") //  "/summernoteImg/"로 시작하는 모든 요청에 대해 이 핸들러가 작동
         		.addResourceLocations("file:///C:/summernoteImg/"); // 실제 파일 시스템에서 해당 정적 리소스를 찾을 경로를 설정
     }
-    
+ 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoggerInterceptor())
+                .excludePathPatterns("/css/**", "/images/**", "/js/**", "/summernoteImg/**");
+    }
 }

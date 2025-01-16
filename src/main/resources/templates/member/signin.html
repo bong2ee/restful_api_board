@@ -20,6 +20,11 @@
 </head>
 <body class="hold-transition login-page">
 	<div class="login-box">
+		<div th:if="${loginMessage}" style="display:none;">
+	        <script th:inline="javascript">
+	            alert([[${loginMessage}]]);
+	        </script>
+		</div>
 		<div class="login-logo">
 			<a href="/"><b>BONG</b>BOARD</a></br><b></b>
 		</div>

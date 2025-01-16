@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="common/header"></head> <!-- 헤더 인클루드 -->
+<head th:replace="~{common/header}"></head> <!-- 헤더 인클루드 -->
 
 <body class="hold-transition layout-top-nav">
 	<div class="wrapper">
@@ -178,6 +178,6 @@
 	</script>
 </body>
 <!-- 푸터 인클루드 -->
-<footer th:replace="common/footer"></footer>
+<footer th:replace="~{common/footer}"></footer>
 
 </html>
