@@ -133,18 +133,20 @@
 	
 	<update id="editBoard" parameterType="com.bong.board.domain.dto.BoardDto">
 		UPDATE BOARD
-		SET TITLE = #{title},
-			CONTENT = #{content},
-			MODDATE = SYSDATE
+		SET 
+		<set>
+	        <if test="updateMode == 'update'">
+	            TITLE = #{title},
+	            CONTENT = #{content},
+	            MODDATE = SYSDATE
+	        </if>
+	        <if test="updateMode == 'delete'">
+	        	DEL_YN = #{delYn}
+	        </if>
+	    </set>
 		WHERE 1=1
 		AND BOARD_NO = #{boardNo}
 	</update>
 	
-	<update id="deleteBoard" parameterType="com.bong.board.domain.dto.BoardDto">
-		UPDATE BOARD
-		SET DEL_YN = #{delYn}
-		WHERE 1=1
-		AND BOARD_NO = #{boardNo}
-	</update>
 </mapper>
 

@@ -33,5 +33,8 @@ public class BoardDto extends PageDto {
     private String keyword;
     private String searchCate;
     
+    //게시글 상태
+    private String updateMode;
+    
 	
 }

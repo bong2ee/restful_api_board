@@ -56,46 +56,56 @@ public class BoardService {
 	 * */
 	public ResponseDto<?> saveBoard(BoardDto boardDto) {	
 		
-		String memberId = (String) session.getAttribute("memberId");
-		Integer memberNo = (Integer) session.getAttribute("memberNo");
-		boardDto.setMemberId(memberId);
-		boardDto.setMemberNo(memberNo);
+		int result = 0;
 		
-		// 대댓글 작성
-		if (boardDto.getStep() > 0) { 
+		if (!boardDto.getUpdateMode().equals("") && boardDto.getUpdateMode() != null) {
+			result = boardRepository.editBoard(boardDto);
+		} else {
+		
+			String memberId = (String) session.getAttribute("memberId");
+			Integer memberNo = (Integer) session.getAttribute("memberNo");
 			
-			boardDto.setDepth(3); //DEPTH -> 3
-			boardDto.setTitle("ReComment");
-			boardDto.setDelYn("N");	
+			boardDto.setMemberId(memberId);
+			boardDto.setMemberNo(memberNo);
 			
-		} else { 
-			
-			
-			if (boardDto.getDepth() == 0) {  
-			
-				// 본문 작성
-				int groupMax = boardRepository.selectGroupMax();
-				boardDto.setGroupNo(groupMax+ 1);
-				boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
-				boardDto.setDelYn("N");
+			// 대댓글 작성
+			if (boardDto.getStep() > 0) { 
 				
-			} else {
+				boardDto.setDepth(3); //DEPTH -> 3
+				boardDto.setTitle("ReComment");
+				boardDto.setDelYn("N");	
+				
+			} else { 
+				
+				
+				if (boardDto.getDepth() == 0) {  
+				
+					// 본문 작성
+					int groupMax = boardRepository.selectGroupMax();
+					boardDto.setGroupNo(groupMax+ 1);
+					boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
+					boardDto.setDelYn("N");
+					
+				} else {
+				
+					// 댓글 작성
+					BoardDto searchDto = new BoardDto();
+					searchDto.setGroupNo(boardDto.getGroupNo());
+					int stepMax = boardRepository.selectStepMax(searchDto);
+					boardDto.setStep(stepMax + 1);
+					boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
+					boardDto.setTitle("comment");
+					boardDto.setDelYn("N");
+				
+				}
+			} 
 			
-				// 댓글 작성
-				BoardDto searchDto = new BoardDto();
-				searchDto.setGroupNo(boardDto.getGroupNo());
-				int stepMax = boardRepository.selectStepMax(searchDto);
-				boardDto.setStep(stepMax + 1);
-				boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
-				boardDto.setTitle("comment");
-				boardDto.setDelYn("N");
-			
-			}
-		} 
-		
-		int result = boardRepository.saveBoard(boardDto);
-        return result > 0 ? ResponseDto.createSuccess(boardDto, "등록되었습니다.") : ResponseDto.createError("등록에 실패했습니다.");
+			result = boardRepository.saveBoard(boardDto);
+	        
 	
+		}
+		
+		return result > 0 ? ResponseDto.createSuccess(boardDto, "등록되었습니다.") : ResponseDto.createError("등록에 실패했습니다.");
 	}
 
 	/* 
@@ -161,10 +171,6 @@ public class BoardService {
 		return jsonObject;
 	}
 
-	public ResponseDto<?> editBoard(BoardDto boardDto) {
-		int result = boardRepository.editBoard(boardDto);
-        return result > 0 ? ResponseDto.createSuccess(boardDto, "수정되었습니다.") : ResponseDto.createError("수정에 실패했습니다.");
-	}
 	
 	
 

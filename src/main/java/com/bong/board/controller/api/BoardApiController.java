@@ -48,7 +48,7 @@ public class BoardApiController {
 	@PostMapping(value = "/save", produces = "application/json")
 	@ResponseBody
 	public ResponseDto<?> saveboard (@RequestBody BoardDto boardDto) {
-		return boardDto.getBoardNo() != 0 ? boardService.editBoard(boardDto) : boardService.saveBoard(boardDto);
+		return boardService.saveBoard(boardDto);
 	}
 		
 	/* 

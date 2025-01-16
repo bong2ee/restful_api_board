@@ -27,6 +27,5 @@ public interface BoardRepository {
 
 	public int editBoard(BoardDto boardDto);
 
-	public int deleteBoard(BoardDto boardDto);
 	
 }

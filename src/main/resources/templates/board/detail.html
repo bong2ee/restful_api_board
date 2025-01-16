@@ -50,8 +50,8 @@
 									<div class="row mt-1 p-2" style="background-color: white;">
 									    <div class="col-9"></div>
 									    <div class="col-3 d-flex justify-content-end">
-									        <button type="button" class="btn btn-outline-dark ml-2" onclick="location.href='/board/write?boardNo=' + document.getElementById('boardNo').value">수정</button>
-											<button type="button" class="btn btn-outline-danger ml-2" onclick="location.href='/board/write'">삭제</button>
+									        <button type="button" class="btn btn-outline-dark ml-2" onclick="editBoard()">수정</button>
+											<button type="button" class="btn btn-outline-danger ml-2" th:onclick="'deleteBoard(' + ${boardDto.boardNo} + ')'">삭제</button>
 									    </div>
 									</div>
 							
@@ -330,6 +330,38 @@
   		      }
   		  });
 		  
+		}
+		
+		function editBoard() {
+			location.href='/board/write?boardNo=' + $('#boardNo').val() + '&updateMode=update';
+		}
+		
+		function deleteBoard(boardNo) {
+			
+			if(!confirm("삭제하시겠습니까?")) {
+				return;
+			} 
+			
+			$.ajax({
+  		      url: '/api/board/save', 
+  		      type: 'POST',
+  		      contentType: 'application/json', 
+  		      dataType: 'json', 
+  		      data: {
+				boardNo : boardNo,
+				updateMode : "delete"
+			  },
+  		      success: function(response) {
+  				  if (response.status === 'success') {
+					  $(`#reCommentOpenYn_${step}`).val("N");
+  					  getReCommentList(step);
+  		          } 
+  		      },
+  		      error: function(xhr, status, error) {
+  		          console.error('Error:', error); 
+  				  alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+  		      }
+  		  });
 		}
 		
 	</script>
