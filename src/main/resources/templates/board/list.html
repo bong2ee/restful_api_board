@@ -60,7 +60,7 @@
 						<div id="jsGridBody"></div>
 					</div>
 					
-					<div class="card-footer" style="background-color: white;">
+					<div th:if="${! #strings.isEmpty(memberId)}" class="card-footer" style="background-color: white;">
 						<button type="button" class="btn btn-outline-primary float-right" onclick="location.href='/board/write'">작성</button>
 					</div>
 				</div>

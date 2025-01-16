@@ -58,7 +58,7 @@ public class BoardService {
 		
 		int result = 0;
 		
-		if (!boardDto.getUpdateMode().equals("") && boardDto.getUpdateMode() != null) {
+		if (boardDto.getUpdateMode() != null && !boardDto.getUpdateMode().equals("")) {
 			result = boardRepository.editBoard(boardDto);
 		} else {
 		
@@ -136,6 +136,12 @@ public class BoardService {
 			searchDto.setDepth(3);
 		}
 		List<BoardDto> dtoList = boardRepository.selectCommentList(searchDto);
+		
+		dtoList.stream().forEach(c -> {
+		    if ("Y".equals(c.getDelYn())) {
+		        c.setContent("삭제된 댓글입니다.");
+		    }
+		});
 		
 		return ListResultDto.<BoardDto>builder()
 									.data(dtoList)

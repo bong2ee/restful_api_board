@@ -46,13 +46,13 @@
 											</tr>
 										</tbody>
 									</table>
-									
-									<div class="row mt-1 p-2" style="background-color: white;">
+				
+									<div id="btnBox" class="row mt-1 p-2" style="background-color: white;">
 									    <div class="col-9"></div>
 									    <div class="col-3 d-flex justify-content-end">
 									        <button type="button" class="btn btn-outline-dark ml-2" onclick="editBoard()">수정</button>
-											<button type="button" class="btn btn-outline-danger ml-2" th:onclick="'deleteBoard(' + ${boardDto.boardNo} + ')'">삭제</button>
-									    </div>
+											<button type="button" class="btn btn-outline-danger ml-2" th:onclick="'deleteBoard(' + ${boardDto.boardNo} + ', \'board\')'">삭제</button>
+										</div>
 									</div>
 							
 
@@ -94,7 +94,8 @@
 	<!-- ./wrapper -->
 
 
-	<script>
+	<script th:inline="javascript">
+		const memberId = /*[[${memberId}]]*/;
 
 		$(document).ready(function () {
 			getBoardDetail();
@@ -122,6 +123,10 @@
 				//댓글 입력 용
 				$('#depth').val(r.data.depth);
 				$('#groupNo').val(r.data.groupNo);
+				
+				if(memberId != r.data.memberId) {
+					$('#btnBox').remove();
+				}
 				
 				getCommentList(r.data.groupNo);
 			},
@@ -155,7 +160,6 @@
 		            `;
 				}
 		        r.data.forEach(function (item) {
-					
 				var formattedRegDate = moment(item.regDate).format('YYYY-MM-DD HH:mm:ss');
 	            row += `
 					<div id="commentBox_${item.step}">
@@ -167,8 +171,13 @@
 		                    <div class="text-right py-0 align-middle col-2">
 		                        <div class="btn-group btn-group-sm">
 		                            <a class="btn btn-outline-info" onclick="getReCommentList(\'' + '${item.step}' + '\')"><i class="fas fa-comments""></i></a>
-									<a class="btn btn-outline-secondary"><i class="fas fa-edit"></i></a>
-									<a class="btn btn-outline-danger"><i class="fas fa-trash"></i></a>
+						`
+				if(item.delYn != "Y" && memberId == item.memberId) {
+				row += `
+									<a class="btn btn-outline-danger" onclick="deleteBoard(${item.boardNo})"><i class="fas fa-trash"></i></a>
+					   `
+				}
+				row += `
 		                        </div>
 		                    </div>
 		                </div>
@@ -234,8 +243,13 @@
 								<div class="col-2">${formattedRegDate}</div>
 					            <div class="text-right py-0 align-middle col-2">
 					                <div class="btn-group btn-group-sm">
-										<button type="button" class="btn btn-xs btn-outline-secondary"><i class="fas fa-edit fa-sm"></i></a>
-					                    <button type="button" class="btn btn-xs btn-outline-danger"><i class="fas fa-trash fa-sm"></i></button>
+						`
+						if(item.delYn != "Y" && memberId == item.memberId) {
+						row += `
+					                    <button type="button" class="btn btn-xs btn-outline-danger"onclick="deleteBoard(${item.boardNo})"><i class="fas fa-trash fa-sm"></i></button>
+							   `
+						}
+						row += `		
 					                </div>
 					            </div>
 					        </div>
@@ -336,25 +350,25 @@
 			location.href='/board/write?boardNo=' + $('#boardNo').val() + '&updateMode=update';
 		}
 		
-		function deleteBoard(boardNo) {
-			
+		function deleteBoard(boardNo, boardType) {
 			if(!confirm("삭제하시겠습니까?")) {
 				return;
 			} 
+			
+			let data = 	{
+				boardNo : boardNo,
+				updateMode : "delete"
+			}
 			
 			$.ajax({
   		      url: '/api/board/save', 
   		      type: 'POST',
   		      contentType: 'application/json', 
   		      dataType: 'json', 
-  		      data: {
-				boardNo : boardNo,
-				updateMode : "delete"
-			  },
+  		      data: JSON.stringify(data),
   		      success: function(response) {
   				  if (response.status === 'success') {
-					  $(`#reCommentOpenYn_${step}`).val("N");
-  					  getReCommentList(step);
+					boardType == "board" ?  location.href='/board/list' :  getCommentList($('#groupNo').val());
   		          } 
   		      },
   		      error: function(xhr, status, error) {
