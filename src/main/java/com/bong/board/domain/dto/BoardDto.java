@@ -28,6 +28,8 @@ public class BoardDto extends PageDto {
     private String delYn;        // 삭제 여부
     private Date regDate;        // 작성 날짜
     private Date modDate;        // 수정 날짜
+    private String fileName;     // 첨부파일명
+    private String filePath;     // 첨부파일 경로
     
     //검색
     private String keyword;
@@ -35,6 +37,7 @@ public class BoardDto extends PageDto {
     
     //게시글 상태
     private String updateMode;
+    
     
 	
 }

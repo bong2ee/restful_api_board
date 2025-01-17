@@ -1,6 +1,7 @@
 package com.bong.board.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,15 +41,39 @@ public class BoardApiController {
 	}
 	
 	/* 
-	 * 게시글 본문&댓글 저장  
+	 * 게시글 본문 저장  
 	 * 
 	 * @param boardDto 작성내용
 	 * @return ResponseDto
 	 * */
 	@PostMapping(value = "/save", produces = "application/json")
 	@ResponseBody
-	public ResponseDto<?> saveboard (@RequestBody BoardDto boardDto) {
-		return boardService.saveBoard(boardDto);
+	public ResponseDto<?> saveboard (@ModelAttribute BoardDto boardDto, @RequestParam(value = "file", required = false) MultipartFile file) {
+		return boardService.saveBoard(boardDto, file);
+	}
+	
+	/* 
+	 * 게시글 댓글 & 대댓글 저장  
+	 * 
+	 * @param boardDto 작성내용
+	 * @return ResponseDto
+	 * */
+	@PostMapping(value = "/save-comment", produces = "application/json")
+	@ResponseBody
+	public ResponseDto<?> saveComment (@RequestBody BoardDto boardDto) {
+		return boardService.saveBoard(boardDto, null);
+	}
+	
+	/* 
+	 * 게시글 본문 & 댓글 & 대댓글 삭제 
+	 * 
+	 * @param boardDto
+	 * @return ResponseDto
+	 * */
+	@PostMapping(value = "/delete", produces = "application/json")
+	@ResponseBody
+	public ResponseDto<?> deleteBoard (@RequestBody BoardDto boardDto) {
+		return boardService.saveBoard(boardDto, null);
 	}
 		
 	/* 

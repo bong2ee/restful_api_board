@@ -24,6 +24,9 @@ public class BoardService {
 
 	@Autowired
 	private BoardRepository boardRepository;
+	
+	@Autowired
+	private FileService fileService;
 
 	@Autowired
 	private HttpSession session;
@@ -54,7 +57,7 @@ public class BoardService {
 	 * @param boardDto 작성내용
 	 * @return ResponseDto
 	 * */
-	public ResponseDto<?> saveBoard(BoardDto boardDto) {	
+	public ResponseDto<?> saveBoard(BoardDto boardDto, MultipartFile file) {	
 		
 		int result = 0;
 		
@@ -86,6 +89,12 @@ public class BoardService {
 					boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
 					boardDto.setDelYn("N");
 					
+			
+					//파일 업로드
+					if(!file.isEmpty()){
+						fileService.store(file, boardDto);
+					}
+					
 				} else {
 				
 					// 댓글 작성
@@ -96,6 +105,8 @@ public class BoardService {
 					boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
 					boardDto.setTitle("comment");
 					boardDto.setDelYn("N");
+					boardDto.setFileName("");
+					boardDto.setFilePath("");
 				
 				}
 			} 
