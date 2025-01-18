@@ -15,7 +15,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/summernoteImg/**") //  "/summernoteImg/"로 시작하는 모든 요청에 대해 이 핸들러가 작동
-        		.addResourceLocations("file:///C:/summernoteImg/"); // 실제 파일 시스템에서 해당 정적 리소스를 찾을 경로를 설정
+				.addResourceLocations("file:///C:/summernoteImg/"); // 실제 파일 시스템에서 해당 정적 리소스를 찾을 경로를 설정
+        registry.addResourceHandler("/bongfile/**") //  "/bongfile/"로 시작하는 모든 요청에 대해 이 핸들러가 작동
+				.addResourceLocations("file:///C:/bongfile/"); // 실제 파일 시스템에서 해당 정적 리소스를 찾을 경로를 설정
     }
  
     @Override

@@ -35,7 +35,9 @@
 		MEMBER_ID AS memberId,
 		DEL_YN AS delYn,
 		TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') AS regDate,
-		TO_CHAR(MODDATE, 'YYYY-MM-DD HH24:MI:SS') AS modDate
+		TO_CHAR(MODDATE, 'YYYY-MM-DD HH24:MI:SS') AS modDate,
+		FILE_PATH AS filePath,
+		FILE_NAME AS fileName
 	</sql>
 
 	<!-- 게시 -->

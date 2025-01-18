@@ -37,6 +37,10 @@
 												<th scope="row">작성일시</th>
 												<td><input type="text" class="form-control" id="regDate" readonly></td>
 											</tr>
+											<tr id="attachFileTr">
+												<th scope="row">첨부파일</th>
+												<td id="attachFile"></td>
+											</tr>
 											<tr>
 												<th scope="row">내용</th>
 												<td colspan="3">
@@ -113,22 +117,31 @@
 			data: {boardNo: boardNo},
 			dataType: 'json',
 			success: function (r) {
-				//console.log(r); 
-				$('#title').val(r.data.title);
-				$('#memberId').val(r.data.memberId);
-				$('#regDate').val(moment(r.data.regDate).format('YYYY-MM-DD HH:mm:ss'));
-				$('#viewCnt').val(r.data.viewCnt);
-				$('#content').html(r.data.content);
+				//console.log(r);
+				const data = r.data 
+				$('#title').val(data.title);
+				$('#memberId').val(data.memberId);
+				$('#regDate').val(moment(data.regDate).format('YYYY-MM-DD HH:mm:ss'));
+				$('#viewCnt').val(data.viewCnt);
+				$('#content').html(data.content);
 				
+				
+				if(data.filePath && data.fileName) {
+				let attachFileTd =''
+				attachFileTd += '<a href="'+ data.filePath +'" download>' + data.fileName + '</a>'
+				$('#attachFile').html(attachFileTd)
+				} else {
+					$('#attachFileTr').remove();
+				}
 				//댓글 입력 용
-				$('#depth').val(r.data.depth);
-				$('#groupNo').val(r.data.groupNo);
+				$('#depth').val(data.depth);
+				$('#groupNo').val(data.groupNo);
 				
-				if(memberId != r.data.memberId) {
+				if(memberId != data.memberId) {
 					$('#btnBox').remove();
 				}
 				
-				getCommentList(r.data.groupNo);
+				getCommentList(data.groupNo);
 			},
 			error: function (xhr, status, error) {
 				console.error('Error:', error);
