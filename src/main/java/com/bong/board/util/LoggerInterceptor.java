@@ -14,7 +14,7 @@ public class LoggerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
        
 		log.debug("==================== BEGIN ====================");
-        log.debug("Request URI \t: " + request.getRequestURI());
+        log.debug("Request URI \t: " + "[" +request.getMethod() + "] " + request.getRequestURI());
         
         // "/board"로 시작하는 경로에 대해서만 로그인 여부를 확인
         if (request.getRequestURI().startsWith("/board")) {

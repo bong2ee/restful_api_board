@@ -140,7 +140,7 @@
 		WHERE BOARD_NO = #{boardNo}
 	</update>
 	
-	<update id="editBoard" parameterType="com.bong.board.domain.dto.BoardDto">
+	<update id="updateBoard" parameterType="com.bong.board.domain.dto.BoardDto">
 		UPDATE BOARD 
 		<set>
 	        <if test="updateMode == 'update'">

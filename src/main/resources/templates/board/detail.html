@@ -111,7 +111,7 @@
 		var boardNo = $('#boardNo').val();
 
 		$.ajax({
-			url: '/api/board/detail',
+			url: `/api/board/${boardNo}`,
 			type: 'GET',
 			contentType: 'application/json',
 			data: {boardNo: boardNo},
@@ -360,7 +360,7 @@
 		}
 		
 		function editBoard() {
-			location.href='/board/write?boardNo=' + $('#boardNo').val() + '&updateMode=update';
+			location.href='/board/write?boardNo=' + $('#boardNo').val();
 		}
 		
 		function deleteBoard(boardNo, boardType) {
@@ -368,20 +368,14 @@
 				return;
 			} 
 			
-			let data = 	{
-				boardNo : boardNo,
-				updateMode : "delete"
-			}
-			
 			$.ajax({
-  		      url: '/api/board/delete', 
-  		      type: 'POST',
+  		      url: `/api/board/${boardNo}`, 
+  		      type: 'DELETE',
   		      contentType: 'application/json', 
-  		      dataType: 'json', 
-  		      data: JSON.stringify(data),
   		      success: function(response) {
   				  if (response.status === 'success') {
-					boardType == "board" ?  location.href='/board/list' :  getCommentList($('#groupNo').val());
+					boardType == "board" ?  
+						location.href='/board/list' :  getCommentList($('#groupNo').val());
   		          } 
   		      },
   		      error: function(xhr, status, error) {

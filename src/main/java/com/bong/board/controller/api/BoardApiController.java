@@ -1,8 +1,11 @@
 package com.bong.board.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,6 +44,17 @@ public class BoardApiController {
 	}
 	
 	/* 
+	 * 게시글 상세 조회
+	 * 
+	 * @param searchDto 게시물 번호
+	 * @return ResponseDto
+	 * */
+	@GetMapping("/{boardNo}")
+	public ResponseDto<?>  selectBoardDetail(@PathVariable("boardNo") int boardNo) {
+		return boardService.selectBoardDetail(boardNo);
+	}
+	
+	/* 
 	 * 게시글 본문 저장  
 	 * 
 	 * @param boardDto 작성내용
@@ -65,26 +79,33 @@ public class BoardApiController {
 	}
 	
 	/* 
+	 * 게시글 본문 수정
+	 * 
+	 * @param boardDto 작성내용
+	 * @return ResponseDto
+	 * */
+	@PutMapping("/{boardNo}")
+	@ResponseBody
+	public ResponseDto<?> updateBoard(@PathVariable("boardNo") int boardNo,
+										@ModelAttribute BoardDto boardDto,
+										@RequestParam(value = "file", required = false) MultipartFile file) {
+	    boardDto.setUpdateMode("update");
+	    return boardService.updateBoard(boardDto, file);
+	}
+
+		
+	/* 
 	 * 게시글 본문 & 댓글 & 대댓글 삭제 
 	 * 
 	 * @param boardDto
 	 * @return ResponseDto
 	 * */
-	@PostMapping(value = "/delete", produces = "application/json")
-	@ResponseBody
-	public ResponseDto<?> deleteBoard (@RequestBody BoardDto boardDto) {
-		return boardService.saveBoard(boardDto, null);
-	}
-		
-	/* 
-	 * 게시글 상세 조회
-	 * 
-	 * @param searchDto 게시물 번호
-	 * @return ResponseDto
-	 * */
-	@GetMapping("/detail")
-	public ResponseDto<?>  selectBoardDetail(BoardDto searchDto) {
-		return boardService.selectBoardDetail(searchDto);
+	@DeleteMapping("/{boardNo}")
+	public ResponseDto<?>  deleteBoard(@PathVariable("boardNo") int boardNo) {
+		BoardDto boardDto = new BoardDto();
+		boardDto.setBoardNo(boardNo);
+		boardDto.setUpdateMode("delete");
+		return boardService.updateBoard(boardDto, null);
 	}
 	
 	/* 

@@ -9,7 +9,7 @@ import com.bong.board.domain.dto.BoardDto;
 @Mapper
 public interface BoardRepository {
 
-	public int saveBoard(BoardDto boardDto);
+	int saveBoard(BoardDto boardDto);
 	
 	public List<BoardDto> selectBoardList(BoardDto searchDto);
 	
@@ -25,7 +25,7 @@ public interface BoardRepository {
 
 	public void updateViewCnt(BoardDto searchDto);
 
-	public int editBoard(BoardDto boardDto);
+	int updateBoard(BoardDto boardDto);
 
 	
 }

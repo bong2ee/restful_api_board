@@ -61,62 +61,82 @@ public class BoardService {
 		
 		int result = 0;
 		
-		if (boardDto.getUpdateMode() != null && !boardDto.getUpdateMode().equals("")) {
-			result = boardRepository.editBoard(boardDto);
-		} else {
+		String memberId = (String) session.getAttribute("memberId");
+		Integer memberNo = (Integer) session.getAttribute("memberNo");
 		
-			String memberId = (String) session.getAttribute("memberId");
-			Integer memberNo = (Integer) session.getAttribute("memberNo");
+		boardDto.setMemberId(memberId);
+		boardDto.setMemberNo(memberNo);
+		
+		// 대댓글 작성
+		if (boardDto.getStep() > 0) { 
 			
-			boardDto.setMemberId(memberId);
-			boardDto.setMemberNo(memberNo);
+			boardDto.setDepth(3); //DEPTH -> 3
+			boardDto.setTitle("ReComment");
+			boardDto.setDelYn("N");	
 			
-			// 대댓글 작성
-			if (boardDto.getStep() > 0) { 
-				
-				boardDto.setDepth(3); //DEPTH -> 3
-				boardDto.setTitle("ReComment");
-				boardDto.setDelYn("N");	
-				
-			} else { 
-				
-				
-				if (boardDto.getDepth() == 0) {  
-				
-					// 본문 작성
-					int groupMax = boardRepository.selectGroupMax();
-					boardDto.setGroupNo(groupMax+ 1);
-					boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
-					boardDto.setDelYn("N");
-					
+		} else { 
 			
-					//파일 업로드
-					if(!file.isEmpty()){
-						fileService.store(file, boardDto);
-					}
-					
-				} else {
+			
+			if (boardDto.getDepth() == 0) {  
+			
+				// 본문 작성
+				int groupMax = boardRepository.selectGroupMax();
+				boardDto.setGroupNo(groupMax+ 1);
+				boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 1
+				boardDto.setDelYn("N");
 				
-					// 댓글 작성
-					BoardDto searchDto = new BoardDto();
-					searchDto.setGroupNo(boardDto.getGroupNo());
-					int stepMax = boardRepository.selectStepMax(searchDto);
-					boardDto.setStep(stepMax + 1);
-					boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
-					boardDto.setTitle("comment");
-					boardDto.setDelYn("N");
-					boardDto.setFileName("");
-					boardDto.setFilePath("");
-				
+		
+				//파일 업로드
+				if(!file.isEmpty()){
+					fileService.store(file, boardDto);
 				}
-			} 
+				
+			} else {
 			
-			result = boardRepository.saveBoard(boardDto);
-	        
-	
+				// 댓글 작성
+				BoardDto searchDto = new BoardDto();
+				searchDto.setGroupNo(boardDto.getGroupNo());
+				int stepMax = boardRepository.selectStepMax(searchDto);
+				boardDto.setStep(stepMax + 1);
+				boardDto.setDepth(boardDto.getDepth() + 1); //DEPTH -> 2
+				boardDto.setTitle("comment");
+				boardDto.setDelYn("N");
+				boardDto.setFileName("");
+				boardDto.setFilePath("");
+			
+			}
+		} 
+			
+		try {
+			boardRepository.saveBoard(boardDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDto.createError("등록에 실패했습니다.");
 		}
+		return ResponseDto.createSuccess(boardDto, "등록되었습니다.");
+	}
+	
+	/* 
+	 * 댓글 삭제 , 게시글 수정 & 삭제
+	 * 
+	 * @param searchDto 게시물 번호
+	 * @return ResponseDto
+	 * */
+	public ResponseDto<?> updateBoard(BoardDto boardDto, MultipartFile file) {	
 		
-		return result > 0 ? ResponseDto.createSuccess(boardDto, "등록되었습니다.") : ResponseDto.createError("등록에 실패했습니다.");
+		if(!file.isEmpty()){
+			System.out.println("파ㅣㄹ잇슴");
+			//fileService.store(file, boardDto);
+		}
+
+		try {
+			boardRepository.updateBoard(boardDto);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDto.createError("수정에 실패했습니다.");
+		} 
+		return ResponseDto.createSuccess(boardDto, "수정되었습니다.");
 	}
 
 	/* 
@@ -125,11 +145,21 @@ public class BoardService {
 	 * @param searchDto 게시물 번호
 	 * @return ResponseDto
 	 * */
-	public ResponseDto<?> selectBoardDetail(BoardDto searchDto) {
+	public ResponseDto<?> selectBoardDetail(int boardNo) {
 		
+		BoardDto boardDto = new BoardDto();
+		BoardDto searchDto = new BoardDto();
+		searchDto.setBoardNo(boardNo);
 		searchDto.setDepth(1);
-		boardRepository.updateViewCnt(searchDto);
-		BoardDto boardDto = boardRepository.selectBoardDetail(searchDto);
+		try {
+
+			boardRepository.updateViewCnt(searchDto);
+			boardDto = boardRepository.selectBoardDetail(searchDto);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDto.createError("조회에 실패하였습니다.");
+		}
 		
 		return ResponseDto.createSuccess(boardDto, null);
 	}
